@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EShop.Services.ProductAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EShop.Services.ProductAPI.DbContexts
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
+        DbSet<Category> Categories { get; set; }
+        DbSet<Product> Products { get; set; }
     }
 }
