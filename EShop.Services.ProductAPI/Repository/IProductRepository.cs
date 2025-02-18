@@ -1,13 +1,13 @@
-﻿using EShop.Services.ProductAPI.Models.Dto;
+﻿using EShop.Services.ProductAPI.Models;
 
 namespace EShop.Services.ProductAPI.Repository
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<ProductDto>> GetProducts(int page, int pageSize);
-        Task<ProductDto> GetProductById(int productId);
-        Task<ProductDto> CreateProduct(ProductCreateUpdateDto productCreateUpdateDto);
-        Task<ProductDto> UpdateProduct(int productId, ProductCreateUpdateDto productCreateUpdateDto);
-        Task DeleteProduct(int productId);
+        Task<IEnumerable<Product>> GetProductsAsync(int page, int pageSize);
+        Task<Product> GetProductByIdAsync(int productId);
+        Task<Product> CreateProductAsync(Product product);
+        Task<Product> UpdateProductAsync(int productId, Product product);
+        Task DeleteProductAsync(int productId);
     }
 }

@@ -1,27 +1,21 @@
-﻿using AutoMapper;
-using EShop.Services.ProductAPI.DbContexts;
+﻿using EShop.Services.ProductAPI.DbContexts;
 using EShop.Services.ProductAPI.Models;
-using EShop.Services.ProductAPI.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace EShop.Services.ProductAPI.Repository
 {
-    public class ProductRepository(ApplicationDbContext dbContext, IMapper mapper) : IProductRepository
+    public class ProductRepository(ApplicationDbContext dbContext) : IProductRepository
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
 
-        public async Task<ProductDto> CreateProduct(ProductCreateUpdateDto productCreateUpdateDto)
+        public async Task<Product> CreateProductAsync(Product product)
         {
-            var product = _mapper.Map<Product>(productCreateUpdateDto);
-
             _dbContext.Products.Add(product);
             await _dbContext.SaveChangesAsync();
-
-            return _mapper.Map<ProductDto>(product);
+            return product;
         }
 
-        public async Task DeleteProduct(int productId)
+        public async Task DeleteProductAsync(int productId)
         {
             var product = await _dbContext.Products
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
@@ -35,7 +29,7 @@ namespace EShop.Services.ProductAPI.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<ProductDto> GetProductById(int productId)
+        public async Task<Product> GetProductByIdAsync(int productId)
         {
             var product = await _dbContext.Products
                 .Include(p => p.Category)
@@ -46,10 +40,10 @@ namespace EShop.Services.ProductAPI.Repository
                 throw new KeyNotFoundException("Product not found");
             }
 
-            return _mapper.Map<ProductDto>(product);
+            return product;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetProducts(int page, int pageSize)
+        public async Task<IEnumerable<Product>> GetProductsAsync(int page, int pageSize)
         {
             var products = await _dbContext.Products
                 .Skip((page - 1) * pageSize)
@@ -57,10 +51,10 @@ namespace EShop.Services.ProductAPI.Repository
                 .Include(p => p.Category)
                 .ToListAsync();
 
-            return _mapper.Map<IEnumerable<ProductDto>>(products);
+            return products;
         }
 
-        public async Task<ProductDto> UpdateProduct(int productId, ProductCreateUpdateDto productCreateUpdateDto)
+        public async Task<Product> UpdateProductAsync(int productId, Product updatedProduct)
         {
             var product = await _dbContext.Products
                 .FirstOrDefaultAsync(p => p.ProductId == productId);
@@ -70,10 +64,14 @@ namespace EShop.Services.ProductAPI.Repository
                 throw new KeyNotFoundException("Product not found");
             }
 
-            _mapper.Map(productCreateUpdateDto, product);
+            product.Name = updatedProduct.Name;
+            product.Price = updatedProduct.Price;
+            product.Description = updatedProduct.Description;
+            product.CategoryId = updatedProduct.CategoryId;
+            product.ImageUrl = updatedProduct.ImageUrl;
             await _dbContext.SaveChangesAsync();
 
-            return _mapper.Map<ProductDto>(product);
+            return product;
         }
     }
 }
