@@ -1,13 +1,13 @@
-﻿using EShop.Services.ProductAPI.Models.Dto;
+﻿using EShop.Services.ProductAPI.Models;
 
 namespace EShop.Services.ProductAPI.Repository
 {
     public interface ICategoryRepository
     {
-        Task<IEnumerable<CategoryDto>> GetCategories();
-        Task<CategoryDto> GetCategoryById(int categoryId);
-        Task<CategoryDto> CreateCategory(CategoryCreateUpdateDto categoryCreateUpdateDto);
-        Task<CategoryDto> UpdateCategory(int categoryId, CategoryCreateUpdateDto categoryCreateUpdateDto);
-        Task DeleteCategory(int categoryId);
+        Task<IEnumerable<Category>> GetCategoriesAsync();
+        Task<Category> GetCategoryByIdAsync(int categoryId);
+        Task<Category> CreateCategoryAsync(Category category);
+        Task<Category> UpdateCategoryAsync(int categoryId, Category updatedCategory);
+        Task DeleteCategoryAsync(int categoryId);
     }
 }

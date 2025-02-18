@@ -1,27 +1,21 @@
-﻿using AutoMapper;
-using EShop.Services.ProductAPI.DbContexts;
+﻿using EShop.Services.ProductAPI.DbContexts;
 using EShop.Services.ProductAPI.Models;
-using EShop.Services.ProductAPI.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace EShop.Services.ProductAPI.Repository
 {
-    public class CategoryRepository(ApplicationDbContext dbContext, IMapper mapper) : ICategoryRepository
+    public class CategoryRepository(ApplicationDbContext dbContext) : ICategoryRepository
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
-        private readonly IMapper _mapper = mapper;
 
-        public async Task<CategoryDto> CreateCategory(CategoryCreateUpdateDto categoryCreateUpdateDto)
+        public async Task<Category> CreateCategoryAsync(Category category)
         {
-            var category = _mapper.Map<Category>(categoryCreateUpdateDto);
-
             _dbContext.Categories.Add(category);
             await _dbContext.SaveChangesAsync();
-
-            return _mapper.Map<CategoryDto>(category);
+            return category;
         }
 
-        public async Task DeleteCategory(int categoryId)
+        public async Task DeleteCategoryAsync(int categoryId)
         {
             var category = await _dbContext.Categories
                 .FirstOrDefaultAsync(p => p.CategoryId == categoryId);
@@ -35,13 +29,13 @@ namespace EShop.Services.ProductAPI.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetCategories()
+        public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             var categories = await _dbContext.Categories.ToListAsync();
-            return _mapper.Map<IEnumerable<CategoryDto>>(categories);
+            return categories;
         }
 
-        public async Task<CategoryDto> GetCategoryById(int categoryId)
+        public async Task<Category> GetCategoryByIdAsync(int categoryId)
         {
             var category = await _dbContext.Categories
                 .FirstOrDefaultAsync(p => p.CategoryId == categoryId);
@@ -51,10 +45,10 @@ namespace EShop.Services.ProductAPI.Repository
                 throw new KeyNotFoundException("Category not found");
             }
 
-            return _mapper.Map<CategoryDto>(category);
+            return category;
         }
 
-        public async Task<CategoryDto> UpdateCategory(int categoryId, CategoryCreateUpdateDto categoryCreateUpdateDto)
+        public async Task<Category> UpdateCategoryAsync(int categoryId, Category updatedCategory)
         {
             var category = await _dbContext.Categories
                 .FirstOrDefaultAsync(p => p.CategoryId == categoryId);
@@ -64,10 +58,9 @@ namespace EShop.Services.ProductAPI.Repository
                 throw new KeyNotFoundException("Category not found");
             }
 
-            _mapper.Map(categoryCreateUpdateDto, category);
+            category.CategoryName = updatedCategory.CategoryName;
             await _dbContext.SaveChangesAsync();
-
-            return _mapper.Map<CategoryDto>(category);
+            return category;
         }
     }
 }
