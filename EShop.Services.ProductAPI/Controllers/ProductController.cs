@@ -27,21 +27,21 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductById(int productId)
+        public async Task<IActionResult> GetProductById(int id)
         {
             try
             {
-                var productDto = await _productService.GetProductByIdAsync(productId);
+                var productDto = await _productService.GetProductByIdAsync(id);
                 return Ok(productDto);
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogWarning(ex, "Product with ID {productId} not found.", productId);
+                _logger.LogWarning(ex, "Product with ID {productId} not found.", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while fetching product with ID {productId}.", productId);
+                _logger.LogError(ex, "Error occurred while fetching product with ID {productId}.", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
@@ -62,41 +62,41 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int productId, [FromBody] ProductCreateUpdateDto productCreateUpdateDto)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductCreateUpdateDto productCreateUpdateDto)
         {
             try
             {
-                var updatedProductDto = await _productService.UpdateProductAsync(productId, productCreateUpdateDto);
+                var updatedProductDto = await _productService.UpdateProductAsync(id, productCreateUpdateDto);
                 return Ok(updatedProductDto);
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogWarning(ex, "Product with ID {productId} not found for update.", productId);
+                _logger.LogWarning(ex, "Product with ID {productId} not found for update.", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating product with ID {productId}.", productId);
+                _logger.LogError(ex, "Error occurred while updating product with ID {productId}.", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProduct(int productId)
+        public async Task<IActionResult> DeleteProduct(int id)
         {
             try
             {
-                await _productService.DeleteProductAsync(productId);
+                await _productService.DeleteProductAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
             {
-                _logger.LogWarning(ex, "Product with ID {productId} not found for deletion.", productId);
+                _logger.LogWarning(ex, "Product with ID {productId} not found for deletion.", id);
                 return NotFound(new { message = ex.Message });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while deleting product with ID {productId}.", productId);
+                _logger.LogError(ex, "Error occurred while deleting product with ID {productId}.", id);
                 return StatusCode(500, new { message = ex.Message });
             }
         }
