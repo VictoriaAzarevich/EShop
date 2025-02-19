@@ -6,10 +6,12 @@ namespace EShop.Services.ProductAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController(IProductService productService, ILogger<ProductController> logger) : ControllerBase
+    public class ProductController(IProductService productService,
+        ILogger<ProductController> logger, ICloudinaryService cloudinaryService) : ControllerBase
     {
         private readonly IProductService _productService = productService;
         private readonly ILogger<ProductController> _logger = logger;
+        private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 
         [HttpGet]
         public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10)
@@ -47,10 +49,14 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateUpdateDto productCreateUpdateDto)
+        public async Task<IActionResult> CreateProduct([FromForm] ProductCreateUpdateDto productCreateUpdateDto)
         {
             try
             {
+                if (productCreateUpdateDto.Image != null)
+                {
+                    productCreateUpdateDto.ImageUrl = await _cloudinaryService.UploadImageAsync(productCreateUpdateDto.Image);
+                }
                 var productDto = await _productService.CreateProductAsync(productCreateUpdateDto);
                 return CreatedAtAction(nameof(GetProductById), new { id = productDto.ProductId }, productDto);
             }
@@ -62,10 +68,14 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductCreateUpdateDto productCreateUpdateDto)
+        public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductCreateUpdateDto productCreateUpdateDto)
         {
             try
             {
+                if (productCreateUpdateDto.Image != null)
+                {
+                    productCreateUpdateDto.ImageUrl = await _cloudinaryService.UploadImageAsync(productCreateUpdateDto.Image);
+                }
                 var updatedProductDto = await _productService.UpdateProductAsync(id, productCreateUpdateDto);
                 return Ok(updatedProductDto);
             }
