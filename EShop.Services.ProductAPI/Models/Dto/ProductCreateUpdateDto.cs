@@ -12,5 +12,6 @@ namespace EShop.Services.ProductAPI.Models.Dto
         [Required]
         public int CategoryId { get; set; }
         public string? ImageUrl { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }
