@@ -1,5 +1,6 @@
 ﻿using EShop.Services.ProductAPI.Models.Dto;
 using EShop.Services.ProductAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EShop.Services.ProductAPI.Controllers
@@ -47,6 +48,7 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateCategory([FromBody] CategoryCreateUpdateDto categoryCreateUpdateDto)
         {
             try
@@ -62,6 +64,7 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryCreateUpdateDto categoryCreateUpdateDto)
         {
             try
@@ -82,6 +85,7 @@ namespace EShop.Services.ProductAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try
