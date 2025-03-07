@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using ProductAPI.Models.Dto;
 using ProductAPI.Models;
+using ProductAPI.Repository;
 
-namespace ProductAPI.Repository
+namespace ProductAPI.Services
 {
     public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
     {

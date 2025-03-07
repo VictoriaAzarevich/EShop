@@ -1,6 +1,6 @@
 ﻿using ProductAPI.Models.Dto;
 
-namespace ProductAPI.Repository
+namespace ProductAPI.Services
 {
     public interface ICategoryService
     {

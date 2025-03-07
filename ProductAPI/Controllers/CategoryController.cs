@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductAPI.Models.Dto;
-using ProductAPI.Repository;
+using ProductAPI.Services;
 
 namespace ProductAPI.Controllers
 {
