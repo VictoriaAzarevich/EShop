@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 ProductAPI/Migrations/
+ShoppingCartAPI/Migrations/

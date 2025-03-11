@@ -1,6 +1,4 @@
-﻿using ProductAPI.Models;
-
-namespace ShoppingCartAPI.Models
+﻿namespace ShoppingCartAPI.Models
 {
     public class CartDetails
     {
