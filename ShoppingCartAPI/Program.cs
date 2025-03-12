@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ShoppingCartAPI.DBContext;
+using ShoppingCartAPI.Repository;
+using ShoppingCartAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddControllers();
 
