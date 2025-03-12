@@ -8,7 +8,7 @@ namespace ShoppingCartAPI.Repository
     {
         private readonly ApplicationDbContext _dbContext = dbContext;
         
-        public async Task ApplyCoupon(string userId, string couponCode)
+        public async Task ApplyCouponAsync(string userId, string couponCode)
         {
             var cartHeader = await _dbContext.CartHeaders
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -22,7 +22,7 @@ namespace ShoppingCartAPI.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task ClearCart(string userId)
+        public async Task ClearCartAsync(string userId)
         {
             var cartHeader = await _dbContext.CartHeaders
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -40,7 +40,7 @@ namespace ShoppingCartAPI.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<Cart> CreateUpdateCart(Cart cart)
+        public async Task<Cart> CreateUpdateCartAsync(Cart cart)
         {
             if (cart.CartDetails == null || !cart.CartDetails.Any())
             {
@@ -91,7 +91,7 @@ namespace ShoppingCartAPI.Repository
             return cart;
         }
 
-        public async Task<Cart> GetCartByUserId(string userId)
+        public async Task<Cart> GetCartByUserIdAsync(string userId)
         {
             var cartHeader = await _dbContext.CartHeaders
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -114,7 +114,7 @@ namespace ShoppingCartAPI.Repository
             };
         }
 
-        public async Task RemoveCoupon(string userId)
+        public async Task RemoveCouponAsync(string userId)
         {
             var cartHeader = await _dbContext.CartHeaders
                 .FirstOrDefaultAsync(u => u.UserId == userId);
@@ -131,7 +131,7 @@ namespace ShoppingCartAPI.Repository
             }
         }
 
-        public async Task RemoveFromCart(int cartDetailsId)
+        public async Task RemoveFromCartAsync(int cartDetailsId)
         {
             CartDetails cartDetails = await _dbContext.CartDetails
                 .FirstOrDefaultAsync(u => u.CartDetailsId == cartDetailsId);
