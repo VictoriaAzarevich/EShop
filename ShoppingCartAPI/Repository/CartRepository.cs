@@ -48,14 +48,29 @@ namespace ShoppingCartAPI.Repository
             }
 
             var productIds = cart.CartDetails.Select(cd => cd.ProductId).ToList();
+
             var existingProducts = await _dbContext.Products
                 .Where(p => productIds.Contains(p.ProductId))
-                .Select(p => p.ProductId)
+                .AsNoTracking()  
                 .ToListAsync();
 
-            if (existingProducts.Count != productIds.Count)
+            var missingProducts = cart.CartDetails
+                .Where(cd => !existingProducts.Any(p => p.ProductId == cd.ProductId))
+                .Select(cd => new Product 
+                {
+                    ProductId = cd.Product.ProductId,
+                    Name = cd.Product.Name,
+                    Price = cd.Product.Price,
+                    Description = cd.Product.Description,
+                    CategoryName = cd.Product.CategoryName,
+                    ImageUrl = cd.Product.ImageUrl
+                })
+                .ToList();
+
+            if (missingProducts.Any())
             {
-                throw new KeyNotFoundException("One or more products not found.");
+                _dbContext.Products.AddRange(missingProducts);
+                await _dbContext.SaveChangesAsync();
             }
 
             var cartHeader = await _dbContext.CartHeaders
