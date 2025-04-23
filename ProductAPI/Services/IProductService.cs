@@ -9,5 +9,6 @@ namespace ProductAPI.Services
         Task<ProductDto> CreateProductAsync(ProductCreateUpdateDto productCreateUpdateDto);
         Task<ProductDto> UpdateProductAsync(int productId, ProductCreateUpdateDto productCreateUpdateDto);
         Task DeleteProductAsync(int productId);
+        Task<int> GetProductCountAsync();
     }
 }

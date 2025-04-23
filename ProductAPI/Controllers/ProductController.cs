@@ -20,7 +20,16 @@ namespace ProductAPI.Controllers
             try
             {
                 var productDtos = await _productService.GetProductsAsync(page, pageSize);
-                return Ok(productDtos);
+                var totalProducts = await _productService.GetProductCountAsync(); 
+                var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+
+                var result = new
+                {
+                    Products = productDtos,
+                    TotalPages = totalPages
+                };
+
+                return Ok(result);
             }
             catch (Exception ex)
             {

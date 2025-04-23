@@ -43,6 +43,11 @@ namespace ProductAPI.Repository
             return product;
         }
 
+        public async Task<int> GetProductCountAsync()
+        {
+            return await _dbContext.Products.CountAsync();
+        }
+
         public async Task<IEnumerable<Product>> GetProductsAsync(int page, int pageSize)
         {
             var products = await _dbContext.Products

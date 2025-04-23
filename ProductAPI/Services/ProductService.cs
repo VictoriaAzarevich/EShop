@@ -28,6 +28,11 @@ namespace ProductAPI.Services
             return _mapper.Map<ProductDto>(product);
         }
 
+        public async Task<int> GetProductCountAsync()
+        {
+            return await _productRepository.GetProductCountAsync();
+        }
+
         public async Task<IEnumerable<ProductDto>> GetProductsAsync(int page, int pageSize)
         {
             var products = await _productRepository.GetProductsAsync(page, pageSize);
