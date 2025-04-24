@@ -15,12 +15,12 @@ namespace ProductAPI.Controllers
         private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
 
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> GetProducts(int page = 1, int pageSize = 10, int? categoryId = null)
         {
             try
             {
-                var productDtos = await _productService.GetProductsAsync(page, pageSize);
-                var totalProducts = await _productService.GetProductCountAsync(); 
+                var productDtos = await _productService.GetProductsAsync(page, pageSize, categoryId);
+                var totalProducts = await _productService.GetProductCountAsync(categoryId); 
                 var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
 
                 var result = new
@@ -59,7 +59,6 @@ namespace ProductAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromForm] ProductCreateUpdateDto productCreateUpdateDto)
         {
             try

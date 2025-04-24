@@ -43,20 +43,33 @@ namespace ProductAPI.Repository
             return product;
         }
 
-        public async Task<int> GetProductCountAsync()
+        public async Task<int> GetProductCountAsync(int? categoryId)
         {
-            return await _dbContext.Products.CountAsync();
+            var query = _dbContext.Products.AsQueryable();
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            return await query.CountAsync();
         }
 
-        public async Task<IEnumerable<Product>> GetProductsAsync(int page, int pageSize)
+        public async Task<IEnumerable<Product>> GetProductsAsync(int page, int pageSize, int? categoryId)
         {
-            var products = await _dbContext.Products
+            var query = _dbContext.Products
+                .Include(p => p.Category)
+                .AsQueryable();
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            return await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(p => p.Category)
                 .ToListAsync();
-
-            return products;
         }
 
         public async Task<Product> UpdateProductAsync(int productId, Product updatedProduct)
