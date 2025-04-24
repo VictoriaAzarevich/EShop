@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
 import { ProductResponse } from "../types/ProductResponse";
@@ -7,11 +8,16 @@ import { CategoryResponse } from "../types/CategoryResponse";
 import '../App.css';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const handleCreateProductClick = () => {
+    navigate("/create-product"); 
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +45,13 @@ const Home = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
+
+      <button
+        onClick={handleCreateProductClick}
+        className="bg-blue-500 text-white p-2 rounded mb-4"
+      >
+        Добавить продукт
+      </button>
 
       <div className="mb-4">
         <select
