@@ -63,7 +63,6 @@ namespace ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryCreateUpdateDto categoryCreateUpdateDto)
         {
             try
@@ -84,7 +83,6 @@ namespace ProductAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> DeleteCategory(int id)
         {
             try

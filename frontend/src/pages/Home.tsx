@@ -46,12 +46,21 @@ const Home = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
 
+      <div className="flex justify-normal">
       <button
         onClick={handleCreateProductClick}
-        className="bg-blue-500 text-white p-2 rounded mb-4"
+        className="bg-purple-500 hover:bg-purple-600 text-white p-2 rounded mb-4 mr-2"
       >
         Добавить продукт
       </button>
+
+      <button 
+        onClick={() => navigate('/categories')} 
+        className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded mb-4"
+      >
+        Управление категориями
+      </button>
+      </div>
 
       <div className="mb-4">
         <select
