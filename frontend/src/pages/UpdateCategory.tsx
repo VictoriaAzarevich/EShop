@@ -52,6 +52,12 @@ const UpdateCategory = () => {
           Save
         </button>
       </form>
+      <button
+        onClick={() => navigate("/categories")}
+        className="ml-2 px-4 py-2 border rounded"
+      >
+        Cancel
+      </button>
     </div>
   );
 };
