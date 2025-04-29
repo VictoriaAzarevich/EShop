@@ -1,29 +1,40 @@
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { deleteCategory } from "../services/categoryService";
+import { toast } from "react-toastify";
 
 const DeleteCategory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const deleteCategory = async () => {
+    const confirmAndDelete = async () => {
+      if (!id) {
+        toast.error("The category ID was not found");
+        navigate("/categories");
+        return;
+      }
+
+      const confirm = window.confirm("Are you sure you want to delete this category?");
+      if (!confirm) {
+        navigate("/categories");
+        return;
+      }
+
       try {
-        await axios.delete(`https://localhost:7230/api/category/${id}`);
-        navigate("/");
+        await deleteCategory(Number(id));
+        toast.success("The category was successfully deleted");
+        navigate("/categories");
       } catch (error) {
-        console.error("Ошибка при удалении категории", error);
+        toast.error("Error when deleting a category");
+        console.error(error);
       }
     };
 
-    deleteCategory();
+    confirmAndDelete();
   }, [id, navigate]);
 
-  return (
-    <div className="p-4 text-center">
-      <h2 className="text-xl font-bold">Удаление категории...</h2>
-    </div>
-  );
+  return null; 
 };
 
 export default DeleteCategory;

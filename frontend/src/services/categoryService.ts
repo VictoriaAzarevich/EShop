@@ -18,8 +18,11 @@ export const createCategory = async (category: CategoryRequest): Promise<void> =
   await axios.post(`${BASE_URL}`, category);
 };
 
-export const updateCategory = async (category: CategoryRequest): Promise<void> => {
-  await axios.put(`${BASE_URL}`, { category });
+export const updateCategory = async (
+  id: number,
+  data: CategoryRequest
+): Promise<void> => {
+  await axios.put(`${BASE_URL}/${id}`, data);
 };
 
 export const deleteCategory = async (id: number): Promise<void> => {

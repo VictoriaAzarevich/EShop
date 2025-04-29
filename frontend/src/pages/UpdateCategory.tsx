@@ -1,45 +1,55 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getCategoryById, updateCategory } from "../services/categoryService";
+import { toast } from "react-toastify";
 
 const UpdateCategory = () => {
   const { id } = useParams();
-  const [name, setName] = useState("");
   const navigate = useNavigate();
+  const [categoryName, setCategoryName] = useState("");
 
   useEffect(() => {
     const fetchCategory = async () => {
-      const response = await axios.get(`https://localhost:7230/api/category/${id}`);
-      setName(response.data.name);
+      if (!id) return;
+      try {
+        const category = await getCategoryById(Number(id));
+        setCategoryName(category.categoryName);  
+      } catch (error) {
+        toast.error("Error when loading a category");
+      }
     };
     fetchCategory();
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id) return;
 
     try {
-      await axios.put(`https://localhost:7230/api/category/${id}`, { name });
-      navigate("/");
+      await updateCategory(Number(id), { categoryName });
+      toast.success("The category has been successfully updated!");
+      navigate("/categories");
     } catch (error) {
-      console.error("Ошибка при обновлении категории", error);
+      toast.error("Error when updating a category");
     }
   };
 
   return (
     <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Изменить категорию</h2>
+      <h2 className="text-2xl font-bold mb-4">Edit a category</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
-          className="border p-2 rounded"
           type="text"
-          placeholder="Название категории"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          className="border p-2 rounded"
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
           required
         />
-        <button type="submit" className="bg-green-500 text-white p-2 rounded hover:bg-green-600">
-          Сохранить
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Save
         </button>
       </form>
     </div>

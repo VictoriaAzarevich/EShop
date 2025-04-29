@@ -17,7 +17,7 @@ const Categories = () => {
   };
 
   const handleDelete = async (categoryId: number) => {
-    if (confirm("Точно удалить категорию?")) {
+    if (confirm("Are you sure you want to delete a category?")) {
       await deleteCategory(categoryId);
       await fetchCategories();
     }
@@ -25,13 +25,13 @@ const Categories = () => {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Категории</h1>
+      <h1 className="text-2xl font-bold mb-4">Categories</h1>
 
       <button
         onClick={() => navigate("/create-category")}
         className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4"
       >
-        Create category
+        Create a category
       </button>
 
       <div className="space-y-4">
@@ -40,7 +40,7 @@ const Categories = () => {
             <span>{category.categoryName}</span>
             <div className="space-x-2">
               <button
-                onClick={() => navigate(`/categories/edit/${category.categoryId}`)}
+                onClick={() => navigate(`/update-category/${category.categoryId}`)}
                 className="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded"
               >
                 Edit
