@@ -92,6 +92,14 @@ namespace ShoppingCartAPI.Repository
 
                 if (existingCartDetail == null)
                 {
+                    var existingProduct = await _dbContext.Products
+                        .FirstOrDefaultAsync(p => p.ProductId == cartDetail.ProductId);
+
+                    if (existingProduct != null)
+                    {
+                        _dbContext.Products.Attach(existingProduct); 
+                        cartDetail.Product = existingProduct; 
+                    }
                     cartDetail.CartHeaderId = cartHeader.CartHeaderId;
                     _dbContext.CartDetails.Add(cartDetail);
                 }
