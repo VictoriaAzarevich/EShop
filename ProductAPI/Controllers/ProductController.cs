@@ -78,6 +78,7 @@ namespace ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(int id, [FromForm] ProductCreateUpdateDto productCreateUpdateDto)
         {
             try
@@ -101,6 +102,7 @@ namespace ProductAPI.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {

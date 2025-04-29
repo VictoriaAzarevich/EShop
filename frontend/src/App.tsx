@@ -1,14 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Products from "./pages/Product/Products";
-import CreateProduct from "./pages/Product/CreateProduct";
-import UpdateProduct from "./pages/Product/UpdateProduct";
-import DeleteProduct from "./pages/Product/DeleteProduct";
-import Categories from "./pages/Category/Categories";
-import CreateCategory from "./pages/Category/CreateCategory";
-import UpdateCategory from "./pages/Category/UpdateCategory";
-import DeleteCategory from "./pages/Category/DeleteCategory";
-import CartPage from "./pages/Cart/Cart"
+import CreateProduct from "./pages/CreateProduct";
+import Categories from "./pages/Categories";
+import UpdateProduct from "./pages/UpdateProduct";
+import DeleteProduct from "./pages/DeleteProduct";
+import Products from "./pages/Products";
+import CreateCategory from "./pages/CreateCategory";
+import UpdateCategory from "./pages/UpdateCategory";
+import DeleteCategory from "./pages/DeleteCategory";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -28,7 +27,6 @@ function App() {
         <Route path="/create-category" element={<CreateCategory />} />
         <Route path="/update-category/:id" element={<UpdateCategory />} />
         <Route path="/delete-category/:id" element={<DeleteCategory />} />
-        <Route path="/cart/:userId" element={<CartPage />} /> 
       </Routes>
       <ToastContainer />
     </BrowserRouter>
