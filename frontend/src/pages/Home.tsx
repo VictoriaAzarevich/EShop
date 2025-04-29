@@ -3,6 +3,9 @@ import { getAllProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
 import { ProductResponse } from "../types/ProductResponse";
 import { CategoryResponse } from "../types/CategoryResponse";
+import { createOrUpdateCart } from "../services/cartService"; // добавь это
+
+import { toast } from "react-toastify"; 
 
 import '../App.css';
 
@@ -13,12 +16,13 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const userId = "test-user";
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const categoryList = await getCategories(); 
         setCategories(categoryList);
-        console.log("Категории:", categoryList); 
       } catch (error) {
         console.error("Ошибка при загрузке категорий:", error);
       }
@@ -35,6 +39,28 @@ const Home = () => {
     };
     fetchProducts();
   }, [currentPage, selectedCategory]);
+
+  const handleAddToCart = async (product: ProductResponse) => {
+    try {
+      await createOrUpdateCart({
+        cartHeader: {
+          userId,
+        },
+        cartDetails: [
+          {
+            cartDetailsId: 0,
+            cartHeaderId: 0,
+            productId: product.productId,
+            count: 1,
+            product,
+          },
+        ],
+      });
+      toast.success("Product added to cart");
+    } catch (error) {
+      toast.error("Failed to add to cart");
+    }
+  };
 
   return (
     <div className="p-4">
@@ -65,6 +91,12 @@ const Home = () => {
             <h2 className="text-lg font-semibold">{product.name}</h2>
             <p className="text-sm text-gray-600">{product.description}</p>
             <p className="text-blue-600 font-bold mt-2">${product.price}</p>
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="bg-green-500 text-white px-4 py-2 mt-3 rounded hover:bg-green-600"
+            >
+              Add to Cart
+            </button>
           </div>
         ))}
       </div>
