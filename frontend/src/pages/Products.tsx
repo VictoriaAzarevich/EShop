@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
 import { ProductResponse } from "../types/ProductResponse";
@@ -6,21 +7,26 @@ import { CategoryResponse } from "../types/CategoryResponse";
 
 import '../App.css';
 
-const Home = () => {
+const Products = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState<ProductResponse[]>([]);
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const handleCreateProductClick = () => {
+    navigate("/create-product"); 
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const categoryList = await getCategories(); 
         setCategories(categoryList);
-        console.log("Категории:", categoryList); 
+        console.log("Categories:", categoryList); 
       } catch (error) {
-        console.error("Ошибка при загрузке категорий:", error);
+        console.error("Error when loading a category:", error);
       }
     };
 
@@ -39,6 +45,16 @@ const Home = () => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Products</h1>
+
+      <div className="flex justify-normal">
+      <button
+        onClick={handleCreateProductClick}
+        className="bg-green-500 hover:bg-green-600 text-white p-2 rounded mb-4 mr-2"
+      >
+        Create a product
+      </button>
+      </div>
+
       <div className="mb-4">
         <select
           className="border rounded p-2"
@@ -65,6 +81,20 @@ const Home = () => {
             <h2 className="text-lg font-semibold">{product.name}</h2>
             <p className="text-sm text-gray-600">{product.description}</p>
             <p className="text-blue-600 font-bold mt-2">${product.price}</p>
+            <div className="mt-4 flex space-x-2">
+        <button
+          onClick={() => navigate(`/update-product/${product.productId}`)}
+          className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => navigate(`/delete-product/${product.productId}`)}
+          className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+        >
+          Delete
+        </button>
+      </div>
           </div>
         ))}
       </div>
@@ -90,4 +120,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Products;
