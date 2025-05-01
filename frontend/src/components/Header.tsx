@@ -17,6 +17,9 @@ const Header = () => {
           <Link to="/products" className="hover:underline">
             Product management
           </Link>
+          <Link to="/coupons" className="hover:underline">
+            Coupon management
+          </Link>
           <Link to={`/cart/${userId}`} className="hover:underline">
             Cart
           </Link>

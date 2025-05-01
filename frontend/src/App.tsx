@@ -9,6 +9,10 @@ import CreateCategory from "./pages/Category/CreateCategory";
 import UpdateCategory from "./pages/Category/UpdateCategory";
 import DeleteCategory from "./pages/Category/DeleteCategory";
 import CartPage from "./pages/Cart/Cart"
+import Coupons from "./pages/Coupon/Coupons"
+import CreateCoupon from "./pages/Coupon/CreateCoupon";
+import UpdateCoupon from "./pages/Coupon/UpdateCoupon";
+import DeleteCoupon from "./pages/Coupon/DeleteCoupon";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -29,8 +33,12 @@ function App() {
         <Route path="/update-category/:id" element={<UpdateCategory />} />
         <Route path="/delete-category/:id" element={<DeleteCategory />} />
         <Route path="/cart/:userId" element={<CartPage />} /> 
+        <Route path="/coupons" element={<Coupons />} /> 
+        <Route path="/create-coupon" element={<CreateCoupon />} /> 
+        <Route path="/update-coupon/:couponCode" element={<UpdateCoupon />} /> 
+        <Route path="/delete-coupon/:couponCode" element={<DeleteCoupon />} />
       </Routes>
-      <ToastContainer />
+      <ToastContainer autoClose={3000}/>
     </BrowserRouter>
   );
 }
