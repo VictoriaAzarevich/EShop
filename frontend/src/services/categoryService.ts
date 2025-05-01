@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CategoryResponse } from "../types/CategoryResponse";
-import { CategoryRequest} from "../types/CategoryRequest";
+import { CategoryCreateUpdate} from "../types/CategoryCreateUpdate";
 
 const BASE_URL = "https://localhost:7230/api/category";
 
@@ -14,13 +14,13 @@ export const getCategoryById = async (id: number): Promise<CategoryResponse> => 
   return response.data;
 };
 
-export const createCategory = async (category: CategoryRequest): Promise<void> => {
+export const createCategory = async (category: CategoryCreateUpdate): Promise<void> => {
   await axios.post(`${BASE_URL}`, category);
 };
 
 export const updateCategory = async (
   id: number,
-  data: CategoryRequest
+  data: CategoryCreateUpdate
 ): Promise<void> => {
   await axios.put(`${BASE_URL}/${id}`, data);
 };
