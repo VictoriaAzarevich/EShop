@@ -12,6 +12,7 @@ namespace CouponAPI.Services
 
         public async Task<CouponDto> CreateCouponAsync(CouponDto couponDto)
         {
+            couponDto.CouponCode = couponDto.CouponCode.ToLower();
             var coupon = _mapper.Map<Coupon>(couponDto);
             var createdCoupon = await _couponRepository.CreateCouponAsync(coupon);
             return _mapper.Map<CouponDto>(createdCoupon);
@@ -30,9 +31,16 @@ namespace CouponAPI.Services
 
         public async Task<CouponDto> UpdateCouponAsync(int couponId, CouponDto couponDto)
         {
+            couponDto.CouponCode = couponDto.CouponCode.ToLower();
             var coupon = _mapper.Map<Coupon>(couponDto);
             var updatedCoupon = await _couponRepository.UpdateCouponAsync(couponId, coupon);
             return _mapper.Map<CouponDto>(updatedCoupon);
+        }
+
+        public async Task<IEnumerable<CouponDto>> GetCouponsAsync()
+        {
+            var coupons = await _couponRepository.GetCouponsAsync();
+            return _mapper.Map<IEnumerable<CouponDto>>(coupons);
         }
     }
 }

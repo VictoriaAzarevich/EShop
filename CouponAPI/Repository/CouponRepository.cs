@@ -57,5 +57,11 @@ namespace CouponAPI.Repository
             await _dbContext.SaveChangesAsync();
             return coupon;
         }
+
+        public async Task<IEnumerable<Coupon>> GetCouponsAsync()
+        {
+            var coupons = await _dbContext.Coupons.ToListAsync();
+            return coupons;
+        }
     }
 }

@@ -11,6 +11,21 @@ namespace CouponAPI.Controllers
         private readonly ICouponService _couponService = couponService;
         private readonly ILogger<CouponController> _logger = logger;
 
+        [HttpGet]
+        public async Task<IActionResult> GetCoupons()
+        {
+            try
+            {
+                var couponDtos = await _couponService.GetCouponsAsync();
+                return Ok(couponDtos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching categories.");
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
         [HttpGet("{couponCode}")]
         public async Task<IActionResult> GetCouponByCode(string couponCode)
         {
