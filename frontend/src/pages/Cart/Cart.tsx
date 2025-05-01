@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Cart } from "../../types/Cart";
-import { applyCoupon, getCartByUserId, removeCoupon } from "../../services/cartService";
+import { applyCoupon, getCartByUserId, removeCartItem, removeCoupon } from "../../services/cartService";
 import { useParams } from "react-router-dom";
 
 const CartPage = () => {
@@ -26,7 +26,7 @@ const CartPage = () => {
 
   const handleRemoveItem = async (cartDetailsId: number) => {
     try {
-      await removeItemFromCart(cartDetailsId);
+      await removeCartItem(cartDetailsId);
       toast.success("Item removed");
       fetchCart();
     } catch (err) {
@@ -115,7 +115,3 @@ const CartPage = () => {
 };
 
 export default CartPage;
-function removeItemFromCart(cartDetailsId: number) {
-  throw new Error("Function not implemented.");
-}
-
