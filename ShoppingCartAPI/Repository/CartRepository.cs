@@ -156,7 +156,7 @@ namespace ShoppingCartAPI.Repository
 
         public async Task RemoveFromCartAsync(int cartDetailsId)
         {
-            CartDetails cartDetails = await _dbContext.CartDetails
+            CartDetails? cartDetails = await _dbContext.CartDetails
                 .FirstOrDefaultAsync(u => u.CartDetailsId == cartDetailsId);
 
             if (cartDetails == null)
@@ -164,21 +164,7 @@ namespace ShoppingCartAPI.Repository
                 throw new KeyNotFoundException("Cart details not found");
             }
 
-            bool isLastItem = !await _dbContext.CartDetails
-            .AnyAsync(u => u.CartHeaderId == cartDetails.CartHeaderId && u.CartDetailsId != cartDetailsId);
-
             _dbContext.CartDetails.Remove(cartDetails);
-
-            if (isLastItem)
-            {
-                var cartHeaderToRemove = await _dbContext.CartHeaders
-                    .FirstOrDefaultAsync(u => u.CartHeaderId == cartDetails.CartHeaderId);
-
-                if (cartHeaderToRemove != null)
-                {
-                    _dbContext.CartHeaders.Remove(cartHeaderToRemove);
-                }
-            }
 
             await _dbContext.SaveChangesAsync();
         }
