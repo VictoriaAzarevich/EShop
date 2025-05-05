@@ -16,6 +16,7 @@ import DeleteCoupon from "./pages/Coupon/DeleteCoupon";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import CallbackPage from './pages/CallbackPage';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
     <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/callback" element={<CallbackPage />} />
         <Route path="/products" element={<Products />} />
         <Route path="/create-product" element={<CreateProduct />} />
         <Route path="/update-product/:id" element={<UpdateProduct />} />
