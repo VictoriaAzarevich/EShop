@@ -1,81 +1,54 @@
 ﻿using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
-using System.Security.Claims;
 
-namespace IdentityServer;
-
-public static class Config
+namespace IdentityServer
 {
-    public static IEnumerable<ApiScope> ApiScopes =>
-        new ApiScope[]
+    public static class Config
+    {
+        public static IEnumerable<IdentityResource> IdentityResources =>
+            new IdentityResource[]
             {
-                new ApiScope(name: "productAPI", displayName: "Product API")
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+                new IdentityResource("roles", "Your role(s)", new[] { "role" }),
             };
 
-    public static IEnumerable<ApiResource> ApiResources =>
-        new ApiResource[]
-        {
-            new ApiResource("productAPI")
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new ApiScope[]
             {
-                Scopes = { "productAPI" },
-                UserClaims = { "role" }  
-            }
-        };
+                new ApiScope("scope1"),
+                new ApiScope("scope2"),
+            };
 
-    public static IEnumerable<Client> Clients =>
-        [
-        new Client
+        public static IEnumerable<Client> Clients =>
+            new Client[]
             {
-                ClientId = "productClient",
-                ClientSecrets = { new Secret("productSecret".Sha256()) },
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
-                AllowedScopes = { "productAPI" }
-            },
-            new Client
-            {
-                ClientId = "swaggerClient",
-                ClientSecrets = { new Secret("swaggerSecret".Sha256()) },
-                AllowedGrantTypes = GrantTypes.Code,
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-                AllowedScopes = { "openid", "profile", "email", "productAPI" },
-                RequirePkce = true,
-                AllowAccessTokensViaBrowser = true
-            }
-        ];
-
-    public static IEnumerable<IdentityResource> IdentityResources =>
-        new IdentityResource[]
-        {
-            new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
-            new IdentityResource("roles", "User roles", new List<string> { "role" }) 
-        };
-
-    public static List<TestUser> TestUsers =>
-        new List<TestUser>
-        {
-            new TestUser
-            {
-                SubjectId = "1",
-                Username = "admin",
-                Password = "password",
-                Claims = new List<Claim>
+                // m2m client credentials flow client
+                new Client
                 {
-                    new Claim("role", "admin"), 
-                    new Claim("scope", "productAPI") 
-                }
-            },
-            new TestUser
-            {
-                SubjectId = "2",
-                Username = "user",
-                Password = "password",
-                Claims = new List<Claim>
+                    ClientId = "m2m.client",
+                    ClientName = "Client Credentials Client",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+
+                    AllowedScopes = { "scope1" }
+                },
+
+                // interactive client using code flow + pkce
+                new Client
                 {
-                    new Claim("role", "user"), 
-                    new Claim("scope", "productAPI") 
-                }
-            }
-        };
+                    ClientId = "interactive",
+                    ClientSecrets = { new Secret("49C1A7E1-0C79-4A89-A3D6-A37998FB86B0".Sha256()) },
+
+                    AllowedGrantTypes = GrantTypes.Code,
+
+                    RedirectUris = { "https://localhost:44300/signin-oidc" },
+                    FrontChannelLogoutUri = "https://localhost:44300/signout-oidc",
+                    PostLogoutRedirectUris = { "https://localhost:44300/signout-callback-oidc" },
+
+                    AllowOfflineAccess = true,
+                    AllowedScopes = { "openid", "profile", "scope2", "roles" }
+                },
+            };
+    }
 }

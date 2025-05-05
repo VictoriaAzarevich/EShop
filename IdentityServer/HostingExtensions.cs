@@ -1,45 +1,69 @@
+using IdentityServer.Data;
+using IdentityServer.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
-namespace IdentityServer;
-
-internal static class HostingExtensions
+namespace IdentityServer
 {
-    public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
+    internal static class HostingExtensions
     {
-        // uncomment if you want to add a UI
-        //builder.Services.AddRazorPages();
-
-        builder.Services.AddIdentityServer(options =>
-            {
-                // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
-                options.EmitStaticAudienceClaim = true;
-            })
-            .AddInMemoryIdentityResources(Config.IdentityResources)
-            .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients);
-
-        return builder.Build();
-    }
-    
-    public static WebApplication ConfigurePipeline(this WebApplication app)
-    { 
-        app.UseSerilogRequestLogging();
-    
-        if (app.Environment.IsDevelopment())
+        public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
-            app.UseDeveloperExceptionPage();
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services
+                .AddIdentityServer(options =>
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+
+                    // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
+                    options.EmitStaticAudienceClaim = true;
+                })
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddAspNetIdentity<ApplicationUser>();
+
+            builder.Services.AddAuthorization();
+
+            //builder.Services.AddAuthentication()
+            //    .AddGoogle(options =>
+            //    {
+            //        options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+            //        // register your IdentityServer with Google at https://console.developers.google.com
+            //        // enable the Google+ API
+            //        // set the redirect URI to https://localhost:5001/signin-google
+            //        options.ClientId = "copy client ID from Google here";
+            //        options.ClientSecret = "copy client secret from Google here";
+            //    });
+
+            return builder.Build();
         }
 
-        // uncomment if you want to add a UI
-        //app.UseStaticFiles();
-        //app.UseRouting();
-            
-        app.UseIdentityServer();
+        public static WebApplication ConfigurePipeline(this WebApplication app)
+        {
+            app.UseSerilogRequestLogging();
 
-        // uncomment if you want to add a UI
-        //app.UseAuthorization();
-        //app.MapRazorPages().RequireAuthorization();
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
-        return app;
+            app.UseRouting();
+            app.UseIdentityServer();
+            app.UseAuthorization();
+
+            return app;
+        }
     }
 }
