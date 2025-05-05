@@ -23,7 +23,13 @@ const CartPage = () => {
           const couponData = await getCouponByCode(data.cartHeader.couponCode);
           console.log(couponData.discountAmount);
           setDiscountAmount(couponData.discountAmount || 0);
-        } catch {
+          toast.success("Coupon applied");
+        } catch (error: any) {
+          if (error.response && error.response.status === 404) {
+            toast.error("Coupon not found");
+          } else {
+            toast.error("Failed to load coupon");
+          }
           setDiscountAmount(0);
         }
       } else {
@@ -56,7 +62,6 @@ const CartPage = () => {
         cartHeader: { ...cart.cartHeader, couponCode: coupon },
       };
       await applyCoupon(updated);
-      toast.success("Coupon applied");
       fetchCart();
     } catch (err) {
       toast.error("Failed to apply coupon");
@@ -124,17 +129,18 @@ const CartPage = () => {
             <p className="text-lg font-bold">
               Total Amount: ${totalAmount.toFixed(2)}
             </p>
-            {cart.cartHeader.couponCode && (
-              <>
-                <p className="text-green-600 font-semibold">
-                  Coupon: {cart.cartHeader.couponCode} (-$
-                  {discountAmount.toFixed(2)})
-                </p>
-                <p className="text-xl font-bold">
-                  Total after discount: ${discountedTotal.toFixed(2)}
-                </p>
-              </>
-            )}
+            {cart.cartHeader.couponCode && discountAmount > 0 && (
+  <>
+    <p className="text-green-600 font-semibold">
+      Coupon: {cart.cartHeader.couponCode} (-$
+      {discountAmount.toFixed(2)})
+    </p>
+    <p className="text-xl font-bold">
+      Total after discount: ${discountedTotal.toFixed(2)}
+    </p>
+  </>
+)}
+
           </div>
         </>
       )}
