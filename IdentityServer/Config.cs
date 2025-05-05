@@ -49,6 +49,20 @@ namespace IdentityServer
                     AllowOfflineAccess = true,
                     AllowedScopes = { "openid", "profile", "scope2", "roles" }
                 },
+
+                new Client
+                {
+                    ClientId = "react-client",
+                    ClientName = "React SPA",
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireClientSecret = false,
+                    RedirectUris = { "http://localhost:3000/callback" },
+                    PostLogoutRedirectUris = { "http://localhost:3000/logout" },
+                    AllowedCorsOrigins = { "http://localhost:3000" },
+                    AllowedScopes = { "openid", "profile", "roles", "api1" },
+                    AllowAccessTokensViaBrowser = true,
+                    RequirePkce = true
+                },
             };
     }
 }

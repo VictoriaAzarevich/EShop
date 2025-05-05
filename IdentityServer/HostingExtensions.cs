@@ -35,6 +35,16 @@ namespace IdentityServer
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.WithOrigins("http://localhost:3000") 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             //builder.Services.AddAuthentication()
             //    .AddGoogle(options =>
             //    {
@@ -59,6 +69,7 @@ namespace IdentityServer
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
             app.UseRouting();
             app.UseIdentityServer();
             app.UseAuthorization();
