@@ -2,6 +2,7 @@ using CouponAPI.DBContext;
 using CouponAPI.Repository;
 using CouponAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,17 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = "https://localhost:5001";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false // или укажи Audience явно, если нужно
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
