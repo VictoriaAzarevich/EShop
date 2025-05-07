@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartAPI", "Shopping
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouponAPI", "CouponAPI\CouponAPI.csproj", "{3166BA29-F1AD-4CE8-97FC-C778D54082B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{1C746731-AFF6-40C4-AB57-0795D413B551}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,18 +55,6 @@ Global
 		{3166BA29-F1AD-4CE8-97FC-C778D54082B7}.Release|x64.Build.0 = Release|Any CPU
 		{3166BA29-F1AD-4CE8-97FC-C778D54082B7}.Release|x86.ActiveCfg = Release|Any CPU
 		{3166BA29-F1AD-4CE8-97FC-C778D54082B7}.Release|x86.Build.0 = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|x64.Build.0 = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Debug|x86.Build.0 = Debug|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|x64.ActiveCfg = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|x64.Build.0 = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|x86.ActiveCfg = Release|Any CPU
-		{1C746731-AFF6-40C4-AB57-0795D413B551}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
