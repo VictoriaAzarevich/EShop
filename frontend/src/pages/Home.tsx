@@ -3,11 +3,10 @@ import { getAllProducts } from "../services/productService";
 import { getCategories } from "../services/categoryService";
 import { ProductResponse } from "../types/ProductResponse";
 import { CategoryResponse } from "../types/CategoryResponse";
-import { createOrUpdateCart } from "../services/cartService"; // добавь это
-
+import { createOrUpdateCart } from "../services/cartService"; 
 import { toast } from "react-toastify"; 
-
 import '../App.css';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Home = () => {
   const [products, setProducts] = useState<ProductResponse[]>([]);
@@ -15,8 +14,9 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const userId = user?.sub ?? "";
 
-  const userId = "test-user";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,26 +41,32 @@ const Home = () => {
   }, [currentPage, selectedCategory]);
 
   const handleAddToCart = async (product: ProductResponse) => {
-    try {
-      await createOrUpdateCart({
-        cartHeader: {
-          userId,
+  if (!isAuthenticated) {
+    loginWithRedirect();
+    return;
+  }
+
+  try {
+    await createOrUpdateCart({
+      cartHeader: {
+        userId,
+      },
+      cartDetails: [
+        {
+          cartDetailsId: 0,
+          cartHeaderId: 0,
+          productId: product.productId,
+          count: 1,
+          product,
         },
-        cartDetails: [
-          {
-            cartDetailsId: 0,
-            cartHeaderId: 0,
-            productId: product.productId,
-            count: 1,
-            product,
-          },
-        ],
-      });
-      toast.success("Product added to cart");
-    } catch (error) {
-      toast.error("Failed to add to cart");
-    }
-  };
+      ],
+    });
+    toast.success("Product added to cart");
+  } catch (error) {
+    toast.error("Failed to add to cart");
+  }
+};
+
 
   return (
     <div className="p-4">
