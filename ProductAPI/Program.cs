@@ -37,10 +37,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
-        options.Authority = "https://localhost:5001";
+        options.Authority = "https://dev-heip0j2xpizkvc8y.us.auth0.com/"; 
+        options.Audience = "https://eshop.api";
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateAudience = false 
+            RoleClaimType = "https://eshop.api.com/roles"
         };
     });
 builder.Services.AddAuthorization();
@@ -69,6 +70,7 @@ app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
