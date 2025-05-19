@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Cart } from "../../types/Cart";
 import { applyCoupon, getCartByUserId, removeCartItem, removeCoupon } from "../../services/cartService";
-import { useParams } from "react-router-dom";
-import { getCouponByCode } from "../../services/couponService";
+import { useNavigate, useParams } from "react-router-dom";
+// import { getCouponByCode } from "../../services/couponService";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const CartPage = () => {
   const { userId } = useParams<{ userId: string }>();
   const [cart, setCart] = useState<Cart | null>(null);
   const [coupon, setCoupon] = useState("");
-  const [discountAmount, setDiscountAmount] = useState(0);
   const { getAccessTokenSilently } = useAuth0();
+  const navigate = useNavigate();
 
   const fetchCart = async () => {
     if (!userId) return;
@@ -21,22 +21,22 @@ const CartPage = () => {
       const data = await getCartByUserId(userId, token);
       setCart(data);
 
-      if (data.cartHeader.couponCode) {
-        try {
-          const couponData = await getCouponByCode(data.cartHeader.couponCode);
-          setDiscountAmount(couponData.discountAmount || 0);
-          toast.success("Coupon applied");
-        } catch (error: any) {
-          if (error.response && error.response.status === 404) {
-            toast.error("Coupon not found");
-          } else {
-            toast.error("Failed to load coupon");
-          }
-          setDiscountAmount(0);
-        }
-      } else {
-        setDiscountAmount(0);
-      }
+      // if (data.cartHeader.couponCode) {
+      //   try {
+      //     const couponData = await getCouponByCode(data.cartHeader.couponCode);
+      //     setDiscountAmount(couponData.discountAmount || 0);
+      //     toast.success("Coupon applied");
+      //   } catch (error: any) {
+      //     if (error.response && error.response.status === 404) {
+      //       toast.error("Coupon not found");
+      //     } else {
+      //       toast.error("Failed to load coupon");
+      //     }
+      //     setDiscountAmount(0);
+      //   }
+      // } else {
+      //   setDiscountAmount(0);
+      // }
     } catch (err) {
       toast.error("Failed to fetch cart");
     }
@@ -91,8 +91,6 @@ const CartPage = () => {
     0
   );
 
-  const discountedTotal = Math.max(totalAmount - discountAmount, 0);
-
   return (
     <div className="p-4 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
@@ -109,9 +107,17 @@ const CartPage = () => {
                   key={item.cartDetailsId}
                   className="border p-4 rounded shadow-sm"
                 >
+                  {item.product.imageUrl && (
+        <img
+          src={item.product.imageUrl}
+          alt={item.product.name}
+          className="w-24 h-24 object-cover rounded"
+        />
+      )}
                   <div className="flex justify-between">
                     <div>
                       <p className="font-semibold">{item.product.name}</p>
+                      <p className="text-gray-600 mb-1">{item.product.description}</p>
                       <p>Quantity: {item.count}</p>
                       <p>Price: ${item.product.price.toFixed(2)}</p>
                       <p className="font-semibold">
@@ -134,14 +140,14 @@ const CartPage = () => {
             <p className="text-lg font-bold">
               Total Amount: ${totalAmount.toFixed(2)}
             </p>
-            {cart.cartHeader.couponCode && discountAmount > 0 && (
+            {cart.cartHeader.couponCode && cart.cartHeader.discountTotal > 0 && (
   <>
     <p className="text-green-600 font-semibold">
       Coupon: {cart.cartHeader.couponCode} (-$
-      {discountAmount.toFixed(2)})
+      {cart.cartHeader.discountTotal.toFixed(2)})
     </p>
     <p className="text-xl font-bold">
-      Total after discount: ${discountedTotal.toFixed(2)}
+      Total after discount: ${cart.cartHeader.orderTotal.toFixed(2)}
     </p>
   </>
 )}
@@ -172,6 +178,17 @@ const CartPage = () => {
             Remove Coupon
           </button>
         </div>
+        {cart.cartDetails.length > 0 && (
+  <div className="mt-6 text-right">
+    <button
+      onClick={() => navigate(`/checkout/${userId}`)}
+      className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+    >
+      Checkout
+    </button>
+  </div>
+)}
+
       </div>
     </div>
   );

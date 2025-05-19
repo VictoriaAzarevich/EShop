@@ -9,6 +9,7 @@ import CreateCategory from "./pages/Category/CreateCategory";
 import UpdateCategory from "./pages/Category/UpdateCategory";
 import DeleteCategory from "./pages/Category/DeleteCategory";
 import CartPage from "./pages/Cart/Cart"
+import CheckoutPage from "./pages/Cart/CheckoutPage"
 import Coupons from "./pages/Coupon/Coupons"
 import CreateCoupon from "./pages/Coupon/CreateCoupon";
 import UpdateCoupon from "./pages/Coupon/UpdateCoupon";
@@ -37,6 +38,7 @@ function App() {
         <Route path="/create-coupon" element={<CreateCoupon />} /> 
         <Route path="/update-coupon/:couponCode" element={<UpdateCoupon />} /> 
         <Route path="/delete-coupon/:couponCode" element={<DeleteCoupon />} />
+        <Route path="/checkout/:userId" element={<CheckoutPage />} />
       </Routes>
       <ToastContainer autoClose={3000}/>
     </BrowserRouter>
