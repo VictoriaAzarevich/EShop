@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCategoryById, updateCategory } from "../../services/categoryService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UpdateCategory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [categoryName, setCategoryName] = useState("");
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -26,7 +28,8 @@ const UpdateCategory = () => {
     if (!id) return;
 
     try {
-      await updateCategory(Number(id), { categoryName });
+      const token = await getAccessTokenSilently();
+      await updateCategory(Number(id), { categoryName }, token);
       toast.success("The category has been successfully updated!");
       navigate("/categories");
     } catch (error) {

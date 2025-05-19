@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CategoryResponse } from "../../types/CategoryResponse";
 import { deleteCategory, getCategories } from "../../services/categoryService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 const Categories = () => {
   const [categories, setCategories] = useState<CategoryResponse[]>([]);
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     fetchCategories();
@@ -18,8 +20,9 @@ const Categories = () => {
   };
 
   const handleDelete = async (categoryId: number) => {
+    const token = await getAccessTokenSilently();
     if (confirm("Are you sure you want to delete a category?")) {
-      await deleteCategory(categoryId);
+      await deleteCategory(categoryId, token);
       await fetchCategories();
     }
   };

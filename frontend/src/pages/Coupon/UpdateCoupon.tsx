@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCouponByCode, updateCoupon } from "../../services/couponService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UpdateCoupon = () => {
   const { couponCode } = useParams();
@@ -10,6 +11,7 @@ const UpdateCoupon = () => {
   const [couponId, setCouponId] = useState<number | null>(null);
   const [code, setCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchCoupon = async () => {
@@ -33,10 +35,11 @@ const UpdateCoupon = () => {
     if (couponId === null) return;
 
     try {
+      const token = await getAccessTokenSilently();
       await updateCoupon(couponId, {
         couponCode: code,
         discountAmount,
-      });
+      }, token);
 
       toast.success("The coupon has been successfully updated!");
       navigate("/coupons");

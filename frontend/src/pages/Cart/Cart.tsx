@@ -4,24 +4,26 @@ import { Cart } from "../../types/Cart";
 import { applyCoupon, getCartByUserId, removeCartItem, removeCoupon } from "../../services/cartService";
 import { useParams } from "react-router-dom";
 import { getCouponByCode } from "../../services/couponService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CartPage = () => {
   const { userId } = useParams<{ userId: string }>();
   const [cart, setCart] = useState<Cart | null>(null);
   const [coupon, setCoupon] = useState("");
   const [discountAmount, setDiscountAmount] = useState(0);
+  const { getAccessTokenSilently } = useAuth0();
 
   const fetchCart = async () => {
     if (!userId) return;
 
     try {
-      const data = await getCartByUserId(userId);
+      const token = await getAccessTokenSilently();
+      const data = await getCartByUserId(userId, token);
       setCart(data);
 
       if (data.cartHeader.couponCode) {
         try {
           const couponData = await getCouponByCode(data.cartHeader.couponCode);
-          console.log(couponData.discountAmount);
           setDiscountAmount(couponData.discountAmount || 0);
           toast.success("Coupon applied");
         } catch (error: any) {
@@ -46,7 +48,8 @@ const CartPage = () => {
 
   const handleRemoveItem = async (cartDetailsId: number) => {
     try {
-      await removeCartItem(cartDetailsId);
+      const token = await getAccessTokenSilently();
+      await removeCartItem(cartDetailsId, token);
       toast.success("Item removed");
       fetchCart();
     } catch (err) {
@@ -56,12 +59,13 @@ const CartPage = () => {
 
   const handleApplyCoupon = async () => {
     try {
+      const token = await getAccessTokenSilently();
       if (!cart) return;
       const updated = {
         ...cart,
         cartHeader: { ...cart.cartHeader, couponCode: coupon },
       };
-      await applyCoupon(updated);
+      await applyCoupon(updated, token);
       fetchCart();
     } catch (err) {
       toast.error("Failed to apply coupon");
@@ -71,7 +75,8 @@ const CartPage = () => {
   const handleRemoveCoupon = async () => {
     if (!userId) return;
     try {
-      await removeCoupon(userId);
+      const token = await getAccessTokenSilently();
+      await removeCoupon(userId, token);
       toast.success("Coupon removed");
       fetchCart();
     } catch (err) {

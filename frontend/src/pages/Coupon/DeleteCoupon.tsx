@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCouponByCode, deleteCoupon } from "../../services/couponService";
 import { CouponResponse } from "../../types/CouponResponse";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const DeleteCoupon = () => {
   const { couponCode } = useParams<{ couponCode: string }>();
@@ -10,6 +11,7 @@ const DeleteCoupon = () => {
 
   const [coupon, setCoupon] = useState<CouponResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchCoupon = async () => {
@@ -31,7 +33,8 @@ const DeleteCoupon = () => {
     if (!coupon) return;
 
     try {
-      await deleteCoupon(coupon.couponId);
+      const token = await getAccessTokenSilently();
+      await deleteCoupon(coupon.couponId, token);
       toast.success("Coupon deleted successfully");
       navigate("/coupons");
     } catch (err) {

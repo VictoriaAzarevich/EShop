@@ -14,7 +14,7 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const { isAuthenticated, loginWithRedirect, user } = useAuth0();
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect, user } = useAuth0();
   const userId = user?.sub ?? "";
 
 
@@ -47,6 +47,7 @@ const Home = () => {
   }
 
   try {
+    const token = await getAccessTokenSilently();
     await createOrUpdateCart({
       cartHeader: {
         userId,
@@ -60,7 +61,7 @@ const Home = () => {
           product,
         },
       ],
-    });
+    }, token);
     toast.success("Product added to cart");
   } catch (error) {
     toast.error("Failed to add to cart");

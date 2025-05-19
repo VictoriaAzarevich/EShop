@@ -7,11 +7,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Auth0Provider
-      domain={authConfig.domain}
-      clientId={authConfig.clientId}
-      authorizationParams={authConfig.authorizationParams}
-    >
+    <Auth0Provider {...authConfig}>
       <App />
     </Auth0Provider>
   </StrictMode>,

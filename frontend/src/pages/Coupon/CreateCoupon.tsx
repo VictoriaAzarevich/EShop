@@ -2,17 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createCoupon } from "../../services/couponService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CreateCoupon = () => {
   const [couponCode, setCouponCode] = useState("");
   const [discountAmount, setDiscountAmount] = useState<number>(0);
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await createCoupon({ couponCode, discountAmount });
+      const token = await getAccessTokenSilently();
+      await createCoupon({ couponCode, discountAmount }, token);
 
       toast.success("The coupon was successfully created!");
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getCategories } from "../../services/categoryService";
 import { createProduct } from "../../services/productService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CreateProduct = () => {
   const [name, setName] = useState<string>("");
@@ -11,6 +12,7 @@ const CreateProduct = () => {
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
   const [categories, setCategories] = useState<any[]>([]);  
   const [image, setImage] = useState<File | undefined>(undefined);
+  const { getAccessTokenSilently } = useAuth0();
 
   const navigate = useNavigate();
 
@@ -39,7 +41,8 @@ const CreateProduct = () => {
     if (image) formData.append("image", image);
 
     try {
-      await createProduct(formData);
+      const token = await getAccessTokenSilently();
+      await createProduct(formData, token);
       toast.success("The product has been added successfully!");
       setTimeout(() => navigate("/"), 1500); 
     } catch (error) {

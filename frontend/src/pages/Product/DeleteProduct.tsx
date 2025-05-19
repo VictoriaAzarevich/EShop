@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ProductCreateUpdate } from "../../types/ProductCreateUpdate";
 import { deleteProduct, getProductById } from "../../services/productService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const DeleteProduct = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,6 +11,7 @@ const DeleteProduct = () => {
 
   const [product, setProduct] = useState<ProductCreateUpdate | null>(null);
   const [loading, setLoading] = useState(true);
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,7 +30,8 @@ const DeleteProduct = () => {
 
   const handleDelete = async () => {
     try {
-      await deleteProduct(Number(id));
+      const token = await getAccessTokenSilently();
+      await deleteProduct(Number(id), token);
       toast.success("Product deleted successfully");
       navigate("/products");
     } catch (err) {

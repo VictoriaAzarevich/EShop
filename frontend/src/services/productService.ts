@@ -23,19 +23,28 @@ export const getProductById = async (id: number): Promise<ProductCreateUpdate> =
   return response.data;
 };
 
-export const createProduct = async (product: FormData) => {
-  const response = await axios.post(BASE_URL, product);
+export const createProduct = async (product: FormData, token: string) => {
+  const response = await axios.post(BASE_URL, product, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
   return response.data;
 };
 
-export const updateProduct = async (id: number, productData: FormData): Promise<void> => {
+export const updateProduct = async (id: number, productData: FormData, token: string): Promise<void> => {
   await axios.put(`${BASE_URL}/${id}`, productData, {
     headers: {
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${token}`
     },
-  });
+  }, );
 };
 
-export const deleteProduct = async (id: number): Promise<void> => {
-  await axios.delete(`${BASE_URL}/${id}`);
+export const deleteProduct = async (id: number, token: string): Promise<void> => {
+  await axios.delete(`${BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
 };

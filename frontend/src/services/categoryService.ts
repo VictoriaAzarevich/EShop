@@ -14,17 +14,30 @@ export const getCategoryById = async (id: number): Promise<CategoryResponse> => 
   return response.data;
 };
 
-export const createCategory = async (category: CategoryCreateUpdate): Promise<void> => {
-  await axios.post(`${BASE_URL}`, category);
+export const createCategory = async (category: CategoryCreateUpdate, token: string): Promise<void> => {
+  await axios.post(`${BASE_URL}`, category, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
 };
 
 export const updateCategory = async (
   id: number,
-  data: CategoryCreateUpdate
+  data: CategoryCreateUpdate,
+  token: string
 ): Promise<void> => {
-  await axios.put(`${BASE_URL}/${id}`, data);
+  await axios.put(`${BASE_URL}/${id}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
 };
 
-export const deleteCategory = async (id: number): Promise<void> => {
-  await axios.delete(`${BASE_URL}/${id}`);
+export const deleteCategory = async (id: number, token: string): Promise<void> => {
+  await axios.delete(`${BASE_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
 };

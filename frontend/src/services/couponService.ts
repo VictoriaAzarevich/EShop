@@ -9,18 +9,30 @@ export const getCouponByCode = async (couponCode: string): Promise<CouponRespons
   return response.data;
 };
 
-export const createCoupon = async (coupon: CouponCreateUpdate): Promise<CouponResponse> => {
-  const response = await axios.post(API_BASE, coupon);
+export const createCoupon = async (coupon: CouponCreateUpdate, token: string): Promise<CouponResponse> => {
+  const response = await axios.post(API_BASE, coupon, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
   return response.data;
 };
 
-export const updateCoupon = async (couponId: number, coupon: CouponCreateUpdate): Promise<CouponResponse> => {
-  const response = await axios.put(`${API_BASE}/${couponId}`, coupon);
+export const updateCoupon = async (couponId: number, coupon: CouponCreateUpdate, token: string): Promise<CouponResponse> => {
+  const response = await axios.put(`${API_BASE}/${couponId}`, coupon, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
   return response.data;
 };
 
-export const deleteCoupon = async (couponId: number): Promise<void> => {
-  await axios.delete(`${API_BASE}/${couponId}`);
+export const deleteCoupon = async (couponId: number, token: string): Promise<void> => {
+  await axios.delete(`${API_BASE}/${couponId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
 };
 
 export const getCoupons = async (): Promise<CouponResponse[]> => {

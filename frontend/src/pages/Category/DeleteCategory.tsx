@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deleteCategory } from "../../services/categoryService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const DeleteCategory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const confirmAndDelete = async () => {
@@ -22,7 +24,8 @@ const DeleteCategory = () => {
       }
 
       try {
-        await deleteCategory(Number(id));
+        const token = await getAccessTokenSilently();
+        await deleteCategory(Number(id), token);
         toast.success("The category was successfully deleted");
         navigate("/categories");
       } catch (error) {

@@ -5,6 +5,7 @@ import { ProductCreateUpdate } from "../../types/ProductCreateUpdate";
 import { CategoryResponse } from "../../types/CategoryResponse";
 import { getProductById, updateProduct } from "../../services/productService";
 import { getCategories } from "../../services/categoryService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const UpdateProduct = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,7 @@ const UpdateProduct = () => {
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
   const [image, setImage] = useState<File | undefined>(undefined);
+  const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,7 +63,8 @@ const UpdateProduct = () => {
     }
   
     try {
-      await updateProduct(Number(id), formData);
+      const token = await getAccessTokenSilently();
+      await updateProduct(Number(id), formData, token);
       toast.success("Product updated successfully!");
       setTimeout(() => navigate("/products"), 1500);
     } catch (err) {

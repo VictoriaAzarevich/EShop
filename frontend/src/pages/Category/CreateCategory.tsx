@@ -2,16 +2,19 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import { toast } from "react-toastify"; 
 import { createCategory } from "../../services/categoryService";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const CreateCategory = () => {
   const [categoryName, setCategoryName] = useState("");
   const navigate = useNavigate(); 
+  const { getAccessTokenSilently } = useAuth0();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      await createCategory({ categoryName: categoryName }); 
+      const token = await getAccessTokenSilently();
+      await createCategory({ categoryName: categoryName }, token); 
       
       toast.success("The category was successfully created!"); 
       
