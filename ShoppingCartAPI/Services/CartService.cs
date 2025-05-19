@@ -5,9 +5,10 @@ using ShoppingCartAPI.Repository;
 
 namespace ShoppingCartAPI.Services
 {
-    public class CartService(ICartRepository cartRepository, IMapper mapper) : ICartService
+    public class CartService(ICartRepository cartRepository, ICouponServiceClient couponServiceClient, IMapper mapper) : ICartService
     {
         private readonly ICartRepository _cartRepository = cartRepository;
+        private readonly ICouponServiceClient _couponService = couponServiceClient;
         private readonly IMapper _mapper = mapper;
 
         public async Task ApplyCouponAsync(string userId, string couponCode)
@@ -30,7 +31,26 @@ namespace ShoppingCartAPI.Services
         public async Task<CartDto> GetCartByUserIdAsync(string userId)
         {
             var userCart = await _cartRepository.GetCartByUserIdAsync(userId);
-            return _mapper.Map<CartDto>(userCart);
+            var cartDto = _mapper.Map<CartDto>(userCart);
+
+            if (cartDto.CartHeader.CouponCode != null)
+            {
+                var coupon = await _couponService.GetCouponByCodeAsync(cartDto.CartHeader.CouponCode);
+
+                if (coupon != null)
+                {
+                    cartDto.CartHeader.DiscountTotal = coupon.DiscountAmount;
+                }
+            }
+
+            foreach (var detail in cartDto.CartDetails)
+            {
+                cartDto.CartHeader.OrderTotal += (detail.Product.Price * detail.Count);
+            }
+
+            cartDto.CartHeader.OrderTotal -= cartDto.CartHeader.DiscountTotal;
+
+            return cartDto;
         }
 
         public async Task RemoveCouponAsync(string userId)

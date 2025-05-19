@@ -13,6 +13,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 
+builder.Services.AddHttpClient<ICouponServiceClient, CouponServiceClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7108");
+});
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
