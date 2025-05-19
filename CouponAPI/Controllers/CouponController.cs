@@ -47,7 +47,7 @@ namespace CouponAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<CouponDto>> CreateCupon([FromBody] CouponDto couponDto)
         {
@@ -58,7 +58,7 @@ namespace CouponAPI.Controllers
             return Ok(createdCoupon);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPut("{couponId}")]
         public async Task<ActionResult<CouponDto>> UpdateCupon(int couponId, [FromBody] CouponDto couponDto)
         {
@@ -82,7 +82,7 @@ namespace CouponAPI.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpDelete("{couponId}")]
         public async Task<IActionResult> DeleteCoupon(int couponId)
         {

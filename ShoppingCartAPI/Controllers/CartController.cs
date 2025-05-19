@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ShoppingCartAPI.Models.Dto;
 using ShoppingCartAPI.Services;
 
 namespace ShoppingCartAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CartController(ICartService cartService, ILogger<CartController> logger) : ControllerBase
