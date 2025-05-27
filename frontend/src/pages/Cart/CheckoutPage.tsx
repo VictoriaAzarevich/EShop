@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getCartByUserId } from "../../services/cartService";
+import { checkout, getCartByUserId } from "../../services/cartService";
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Cart } from "../../types/Cart";
@@ -49,8 +49,20 @@ const CheckoutPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!cart || !cart.cartHeader) {
+      toast.error("Cart data is missing. Cannot proceed with checkout.");
+      return;
+    }
+
     try {
-      // const token = await getAccessTokenSilently();
+      const updatedCartHeader = {
+        ...cart.cartHeader,
+        ...form,
+      };
+
+      const token = await getAccessTokenSilently();
+      await checkout(updatedCartHeader, token)
       toast.success("Order placed successfully!");
     } catch (err) {
       toast.error("Failed to place order");

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Cart } from "../types/Cart";
+import { CartHeader } from "../types/CartHeader";
 
 const API_URL = "https://localhost:7153/api/cart";
 
@@ -39,6 +40,15 @@ export const applyCoupon = async (cart: Cart, token: string): Promise<void> => {
 
 export const removeCoupon = async (userId: string, token: string): Promise<void> => {
   await axios.post(`${API_URL}/remove-coupon/${userId}`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+    });
+};
+
+export const checkout = async (cartHeader: CartHeader, token: string): Promise<void> => {
+  console.log(cartHeader)
+  await axios.post(`${API_URL}/checkout`, cartHeader, {
     headers: {
       Authorization: `Bearer ${token}`
     }

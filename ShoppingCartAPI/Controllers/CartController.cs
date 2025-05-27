@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ShoppingCartAPI.Messages;
 using ShoppingCartAPI.Models.Dto;
 using ShoppingCartAPI.Services;
 
@@ -78,6 +79,34 @@ namespace ShoppingCartAPI.Controllers
         {
             await _cartService.RemoveCouponAsync(userId);
             return Ok(new { message = "Coupon removed successfully" });
+        }
+
+        [HttpPost("checkout")]
+        public async Task<IActionResult> Checkout(CheckoutHeaderDto checkoutHeaderDto)
+        {
+            try
+            {
+                CartDto cartDto = await _cartService.GetCartByUserIdAsync(checkoutHeaderDto.UserId);
+
+                if (cartDto == null)
+                {
+                    return BadRequest();
+                }
+
+                checkoutHeaderDto.CartDetails = cartDto.CartDetails;
+                //
+                return Ok(new { message = "Item removed from cart" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning("Cart for user {UserId} not found.", checkoutHeaderDto.UserId);
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while making an order for user {UserId}.", checkoutHeaderDto.UserId);
+                return StatusCode(500, new { message = ex.Message });
+            }
         }
     }
 }
