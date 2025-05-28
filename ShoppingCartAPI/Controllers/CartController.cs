@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using EShop.Contracts;
+using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingCartAPI.Messages;
 using ShoppingCartAPI.Models.Dto;
@@ -9,10 +11,12 @@ namespace ShoppingCartAPI.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController(ICartService cartService, ILogger<CartController> logger) : ControllerBase
+    public class CartController(ICartService cartService, ILogger<CartController> logger,
+        IPublishEndpoint publishEndpoint) : ControllerBase
     {
         private readonly ICartService _cartService = cartService;
         private readonly ILogger<CartController> _logger = logger;
+        private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetCartByUserId(string userId)
@@ -94,8 +98,15 @@ namespace ShoppingCartAPI.Controllers
                 }
 
                 checkoutHeaderDto.CartDetails = cartDto.CartDetails;
-                //
-                return Ok(new { message = "Item removed from cart" });
+
+                await _publishEndpoint.Publish<IBaseMessage>(new
+                {
+                    Id = Guid.NewGuid(),
+                    MessageCreated = DateTime.UtcNow,
+                });
+
+                await _cartService.ClearCartAsync(checkoutHeaderDto.UserId);
+                return Ok(new { message = "The order has been placed" });
             }
             catch (KeyNotFoundException ex)
             {
