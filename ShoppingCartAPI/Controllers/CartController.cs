@@ -99,10 +99,25 @@ namespace ShoppingCartAPI.Controllers
 
                 checkoutHeaderDto.CartDetails = cartDto.CartDetails;
 
-                await _publishEndpoint.Publish<IBaseMessage>(new
+                await _publishEndpoint.Publish<ICheckoutHeader>(new
                 {
                     Id = Guid.NewGuid(),
                     MessageCreated = DateTime.UtcNow,
+                    checkoutHeaderDto.CartHeaderId,
+                    checkoutHeaderDto.UserId,
+                    checkoutHeaderDto.CouponCode,
+                    checkoutHeaderDto.OrderTotal,
+                    checkoutHeaderDto.DiscountTotal,
+                    checkoutHeaderDto.FirstName,
+                    checkoutHeaderDto.LastName,
+                    checkoutHeaderDto.PickupDateTime,
+                    checkoutHeaderDto.Phone,
+                    checkoutHeaderDto.Email,
+                    checkoutHeaderDto.CardNumber,
+                    checkoutHeaderDto.CVV,
+                    checkoutHeaderDto.ExpiryMonthYear,
+                    checkoutHeaderDto.CartTotalItems,
+                    checkoutHeaderDto.CartDetails
                 });
 
                 await _cartService.ClearCartAsync(checkoutHeaderDto.UserId);
