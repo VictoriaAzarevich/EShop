@@ -1,8 +1,9 @@
-﻿using ShoppingCartAPI.Models.Dto;
+﻿using EShop.Contracts;
+using ShoppingCartAPI.Models.Dto;
 
 namespace ShoppingCartAPI.Messages
 {
-    public class CheckoutHeaderDto
+    public interface ICheckoutHeader : IBaseMessage
     {
         public int CartHeaderId { get; set; }
         public string UserId { get; set; }
