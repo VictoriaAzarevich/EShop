@@ -1,3 +1,5 @@
+using EShop.Contracts;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ShoppingCartAPI.DBContext;
@@ -16,6 +18,16 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddHttpClient<ICouponServiceClient, CouponServiceClient>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7108");
+});
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost");
+
+        cfg.Message<IBaseMessage>(m => m.SetEntityName("checkout"));
+    });
 });
 
 
