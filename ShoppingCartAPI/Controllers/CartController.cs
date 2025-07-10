@@ -2,7 +2,6 @@
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCartAPI.Messages;
 using ShoppingCartAPI.Models.Dto;
 using ShoppingCartAPI.Services;
 
@@ -117,7 +116,13 @@ namespace ShoppingCartAPI.Controllers
                     checkoutHeaderDto.CVV,
                     checkoutHeaderDto.ExpiryMonthYear,
                     checkoutHeaderDto.CartTotalItems,
-                    checkoutHeaderDto.CartDetails
+                    CartDetails = checkoutHeaderDto.CartDetails.Select(d => new
+                    {
+                        d.ProductId,
+                        d.Count,
+                        ProductName = d.Product?.Name ?? "",
+                        Price = d.Product?.Price ?? 0
+                    }).ToList()
                 });
 
                 await _cartService.ClearCartAsync(checkoutHeaderDto.UserId);
