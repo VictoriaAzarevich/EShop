@@ -42,7 +42,7 @@ namespace EShop.OrderAPI.Messaging
                     }).ToList()
                 };
 
-                await _orderRepository.AddOrder(orderHeader);
+                await _orderRepository.AddOrderAsync(orderHeader);
             }
             catch (Exception ex)
             {

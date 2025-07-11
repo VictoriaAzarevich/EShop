@@ -5,10 +5,10 @@ using ShoppingCartAPI.Repository;
 
 namespace ShoppingCartAPI.Services
 {
-    public class CartService(ICartRepository cartRepository, ICouponServiceClient couponServiceClient, IMapper mapper) : ICartService
+    public class CartService(ICartRepository cartRepository, ICouponService couponServiceClient, IMapper mapper) : ICartService
     {
         private readonly ICartRepository _cartRepository = cartRepository;
-        private readonly ICouponServiceClient _couponService = couponServiceClient;
+        private readonly ICouponService _couponService = couponServiceClient;
         private readonly IMapper _mapper = mapper;
 
         public async Task ApplyCouponAsync(string userId, string couponCode)

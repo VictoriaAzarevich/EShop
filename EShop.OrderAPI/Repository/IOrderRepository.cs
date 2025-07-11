@@ -4,7 +4,7 @@ namespace EShop.OrderAPI.Repository
 {
     public interface IOrderRepository
     {
-        Task<bool> AddOrder(OrderHeader orderHeader);
-        Task<bool> UpdateOrderPaymentStatus(int orderHeaderId, bool paid);
+        Task<bool> AddOrderAsync(OrderHeader orderHeader);
+        Task<bool> UpdateOrderPaymentStatusAsync(int orderHeaderId, bool paid);
     }
 }

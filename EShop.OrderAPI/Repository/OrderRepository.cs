@@ -9,7 +9,7 @@ namespace EShop.OrderAPI.Repository
         private readonly ApplicationDbContext _dbContext = dbContext;
         private readonly ILogger<OrderRepository> _logger = logger;
 
-        public async Task<bool> AddOrder(OrderHeader orderHeader)
+        public async Task<bool> AddOrderAsync(OrderHeader orderHeader)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace EShop.OrderAPI.Repository
             }
         }
 
-        public async Task<bool> UpdateOrderPaymentStatus(int orderHeaderId, bool paid)
+        public async Task<bool> UpdateOrderPaymentStatusAsync(int orderHeaderId, bool paid)
         {
             try
             {
