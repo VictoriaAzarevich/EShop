@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentProcessor", "Payment
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.PaymentAPI", "EShop.PaymentAPI\EShop.PaymentAPI.csproj", "{0CA3B689-C9D4-4D62-9431-2B73E2CFED8B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EShop.Email", "EShop.Email\EShop.Email.csproj", "{E0E3197E-50BB-4C8C-A87E-E8E90B742386}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,18 @@ Global
 		{0CA3B689-C9D4-4D62-9431-2B73E2CFED8B}.Release|x64.Build.0 = Release|Any CPU
 		{0CA3B689-C9D4-4D62-9431-2B73E2CFED8B}.Release|x86.ActiveCfg = Release|Any CPU
 		{0CA3B689-C9D4-4D62-9431-2B73E2CFED8B}.Release|x86.Build.0 = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|x64.Build.0 = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Debug|x86.Build.0 = Debug|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|x64.ActiveCfg = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|x64.Build.0 = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|x86.ActiveCfg = Release|Any CPU
+		{E0E3197E-50BB-4C8C-A87E-E8E90B742386}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
