@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { checkout, getCartByUserId } from "../../services/cartService";
+import { checkout, getCartByUserId, removeCoupon } from "../../services/cartService";
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Cart } from "../../types/Cart";
@@ -64,8 +64,33 @@ const CheckoutPage = () => {
       const token = await getAccessTokenSilently();
       await checkout(updatedCartHeader, token)
       toast.success("Order placed successfully!");
-    } catch (err) {
+    } catch (err : any) {
+      if (err.response && err.response.status === 400) {
+      const message = err.response.data?.message;
+      const correctValue = err.response.data?.correctValue;
+
+      if (message === "Coupon value has changed" && correctValue !== undefined) {
+        const confirmed = window.confirm(
+          `Купон больше не действует или изменился. Новая скидка: $${correctValue}. Хотите продолжить без него?`
+        );
+
+        if (confirmed) {
+          try {
+            const token = await getAccessTokenSilently();
+            await removeCoupon(cart.cartHeader.userId, token);
+            toast.info("Coupon removed. Try again.");
+            const updatedCart = await getCartByUserId(cart.cartHeader.userId, token);
+            setCart(updatedCart);
+          } catch (removeError) {
+            toast.error("Failed to remove coupon");
+          }
+        }
+      } else {
+        toast.error(message || "Invalid request");
+      }
+    } else {
       toast.error("Failed to place order");
+    }
     }
   };
 
