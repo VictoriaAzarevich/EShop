@@ -4,5 +4,6 @@
     {
         int OrderId { get; }
         bool Status { get; }
+        string Email { get; }
     }
 }

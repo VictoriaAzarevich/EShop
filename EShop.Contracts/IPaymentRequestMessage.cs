@@ -8,5 +8,6 @@
         string CVV { get; }
         string ExpiryMonthYear { get; }
         double OrderTotal { get; }
+        string Email { get; }
     }
 }

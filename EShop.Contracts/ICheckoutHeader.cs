@@ -10,7 +10,7 @@ namespace EShop.Contracts
     {
         int CartHeaderId { get; }
         string UserId { get; }
-        string CouponCode { get; }
+        string? CouponCode { get; }
         double OrderTotal { get; }
         double DiscountTotal { get; }
         string FirstName { get; }
