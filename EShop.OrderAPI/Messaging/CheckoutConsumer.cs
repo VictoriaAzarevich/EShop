@@ -2,13 +2,16 @@
 using EShop.OrderAPI.Models;
 using EShop.OrderAPI.Repository;
 using MassTransit;
+using MassTransit.Transports;
 
 namespace EShop.OrderAPI.Messaging
 {
-    public class CheckoutConsumer(IOrderRepository orderRepository, ILogger<CheckoutConsumer> logger) : IConsumer<ICheckoutHeader>
+    public class CheckoutConsumer(IOrderRepository orderRepository, ILogger<CheckoutConsumer> logger,
+        IPublishEndpoint publishEndpoint) : IConsumer<ICheckoutHeader>
     {
         private readonly IOrderRepository _orderRepository = orderRepository;
         private readonly ILogger<CheckoutConsumer> _logger = logger;
+        private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
         public async Task Consume(ConsumeContext<ICheckoutHeader> context)
         {
@@ -43,6 +46,18 @@ namespace EShop.OrderAPI.Messaging
                 };
 
                 await _orderRepository.AddOrderAsync(orderHeader);
+
+                await _publishEndpoint.Publish<IPaymentRequestMessage>(new
+                {
+                    Id = Guid.NewGuid(),
+                    MessageCreated = DateTime.UtcNow,
+                    OrderId = orderHeader.OrderHeaderId,
+                    Name = $"{orderHeader.FirstName} {orderHeader.LastName}",
+                    CartNumber = orderHeader.CardNumber,
+                    orderHeader.CVV,
+                    orderHeader.ExpiryMonthYear,
+                    orderHeader.OrderTotal
+                });
             }
             catch (Exception ex)
             {
