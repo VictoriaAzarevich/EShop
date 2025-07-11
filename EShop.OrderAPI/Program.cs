@@ -1,3 +1,4 @@
+using EShop.Contracts;
 using EShop.OrderAPI.DbContexts;
 using EShop.OrderAPI.Messaging;
 using EShop.OrderAPI.Repository;
@@ -10,21 +11,37 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+var rabbitConfig = builder.Configuration.GetSection("RabbitMQ");
+
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<CheckoutConsumer>();
+    x.AddConsumer<PaymentConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("localhost", "/", h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
+        cfg.Host(
+            rabbitConfig["Host"],
+            rabbitConfig["VirtualHost"],
+            h =>
+            {
+                h.Username(rabbitConfig["Username"]);
+                h.Password(rabbitConfig["Password"]);
+            });
 
-        cfg.ReceiveEndpoint("order-queue", e =>
+        cfg.ReceiveEndpoint(rabbitConfig["OrderQueue"], e =>
         {
             e.ConfigureConsumer<CheckoutConsumer>(context);
+        });
+
+        cfg.Message<IPaymentRequestMessage>(m =>
+        {
+            m.SetEntityName(rabbitConfig["PaymentExchange"]);
+        });
+
+        cfg.ReceiveEndpoint(rabbitConfig["OrderPaid"], e =>
+        {
+            e.ConfigureConsumer<PaymentConsumer>(context);
         });
     });
 });
