@@ -1,9 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
   const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  const location = useLocation();
+  const isHome = location.pathname === "/";
 
   const handleCartClick = () => {
     if (isAuthenticated) {
@@ -21,7 +23,11 @@ const Header = () => {
       <nav className="container mx-auto flex justify-between items-center">
         <h1 className="text-xl font-bold">EShop</h1>
         <div className="space-x-4">
-          <Link to="/" className="hover:underline">Home</Link>
+          {!isHome && (
+          <Link to="/" className="hover:underline">
+            Home
+          </Link>
+        )}
 
           {isAuthenticated && isAdmin && (
             <>
