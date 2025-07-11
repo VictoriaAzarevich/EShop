@@ -11,11 +11,12 @@ namespace ShoppingCartAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CartController(ICartService cartService, ILogger<CartController> logger,
-        IPublishEndpoint publishEndpoint) : ControllerBase
+        IPublishEndpoint publishEndpoint, ICouponService couponService) : ControllerBase
     {
         private readonly ICartService _cartService = cartService;
         private readonly ILogger<CartController> _logger = logger;
         private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+        private readonly ICouponService _couponService = couponService;
 
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetCartByUserId(string userId)
@@ -94,6 +95,21 @@ namespace ShoppingCartAPI.Controllers
                 if (cartDto == null)
                 {
                     return BadRequest();
+                }
+
+                if (!string.IsNullOrEmpty(checkoutHeaderDto.CouponCode))
+                {
+                    CouponDto couponDto = await _couponService.GetCouponByCodeAsync(checkoutHeaderDto.CouponCode);
+                    
+                    if (couponDto == null) 
+                    {
+                        return BadRequest(new { message = "Coupon is invalid or expired" });
+                    }
+
+                    if (couponDto.DiscountAmount != checkoutHeaderDto.DiscountTotal)
+                    {
+                        return BadRequest(new { message = "Coupon value has changed", correctValue = couponDto.DiscountAmount });
+                    }
                 }
 
                 checkoutHeaderDto.CartDetails = cartDto.CartDetails;

@@ -14,10 +14,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
-
-builder.Services.AddHttpClient<ICouponServiceClient, CouponServiceClient>(client =>
+builder.Services.AddScoped<ICouponService, CouponService>();
+builder.Services.AddHttpClient<ICouponService, CouponService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7108");
+    client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:CouponAPI"]);
 });
 
 builder.Services.AddMassTransit(x =>
