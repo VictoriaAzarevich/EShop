@@ -9,6 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 const CartPage = () => {
   const { userId } = useParams<{ userId: string }>();
   const [cart, setCart] = useState<Cart | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [coupon, setCoupon] = useState("");
   const { getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
@@ -19,8 +20,11 @@ const CartPage = () => {
     try {
       const token = await getAccessTokenSilently();
       const data = await getCartByUserId(userId, token);
-      setCart(data);
-
+      if (!data || !data.cartHeader) {
+        setCart(null); 
+      } else {
+        setCart(data);
+      }
       // if (data.cartHeader.couponCode) {
       //   try {
       //     const couponData = await getCouponByCode(data.cartHeader.couponCode);
@@ -39,6 +43,8 @@ const CartPage = () => {
       // }
     } catch (err) {
       toast.error("Failed to fetch cart");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,12 +90,16 @@ const CartPage = () => {
     }
   };
 
-  if (!cart) return <div className="p-4">Loading...</div>;
+  if (isLoading) return <div className="p-4">Loading...</div>;
 
-  const totalAmount = cart.cartDetails.reduce(
-    (sum, item) => sum + item.count * item.product.price,
-    0
-  );
+if (!cart || !cart.cartDetails || cart.cartDetails.length === 0) {
+  return <div className="p-4 text-lg">Your cart is empty.</div>;
+}
+
+const totalAmount = cart.cartDetails.reduce(
+  (sum, item) => sum + item.count * item.product.price,
+  0
+);
 
   return (
     <div className="p-4 max-w-2xl mx-auto">

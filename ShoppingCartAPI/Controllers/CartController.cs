@@ -29,7 +29,7 @@ namespace ShoppingCartAPI.Controllers
             catch (KeyNotFoundException ex)
             {
                 _logger.LogWarning("Cart for user {UserId} not found.", userId);
-                return NotFound(new { message = ex.Message });
+                return Ok(null);
             }
             catch (Exception ex)
             {
@@ -142,6 +142,7 @@ namespace ShoppingCartAPI.Controllers
                 });
 
                 await _cartService.ClearCartAsync(checkoutHeaderDto.UserId);
+
                 return Ok(new { message = "The order has been placed" });
             }
             catch (KeyNotFoundException ex)

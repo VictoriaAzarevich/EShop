@@ -4,6 +4,7 @@ import { checkout, getCartByUserId, removeCoupon } from "../../services/cartServ
 import { useParams } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Cart } from "../../types/Cart";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutPage = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -19,6 +20,7 @@ const CheckoutPage = () => {
     cvv: "",
     expiryMonthYear: "",
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -64,6 +66,7 @@ const CheckoutPage = () => {
       const token = await getAccessTokenSilently();
       await checkout(updatedCartHeader, token)
       toast.success("Order placed successfully!");
+      navigate("/");
     } catch (err : any) {
       if (err.response && err.response.status === 400) {
       const message = err.response.data?.message;
