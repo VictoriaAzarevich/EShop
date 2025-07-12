@@ -14,7 +14,7 @@ namespace EShop.Email.Repository
             EmailLog emailLog = new EmailLog()
             {
                 Email = message.Email,
-                EmailSent = DateTime.Now,
+                EmailSent = DateTime.UtcNow,
                 Log = $"Order - {message.OrderId} has been created successfully."
             };
 
