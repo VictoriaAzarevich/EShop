@@ -18,7 +18,7 @@ namespace CouponAPI.Repository
         public async Task DeleteCouponAsync(int couponId)
         {
             var coupon = await _dbContext.Coupons
-                .FirstOrDefaultAsync(c => c.CouponId == couponId);
+                .SingleOrDefaultAsync(c => c.CouponId == couponId);
 
             if (coupon == null)
             {
@@ -32,7 +32,7 @@ namespace CouponAPI.Repository
         public async Task<Coupon> GetCouponByCodeAsync(string couponCode)
         {
             var coupon = await _dbContext.Coupons
-                .FirstOrDefaultAsync(c => c.CouponCode == couponCode);
+                .SingleOrDefaultAsync(c => c.CouponCode == couponCode);
 
             if (coupon == null)
             {
@@ -45,7 +45,7 @@ namespace CouponAPI.Repository
         public async Task<Coupon> UpdateCouponAsync(int couponId, Coupon updatedCoupon)
         {
             var coupon = await _dbContext.Coupons
-                .FirstOrDefaultAsync(c => c.CouponId == couponId);
+                .SingleOrDefaultAsync(c => c.CouponId == couponId);
 
             if (coupon == null)
             {
@@ -62,6 +62,12 @@ namespace CouponAPI.Repository
         {
             var coupons = await _dbContext.Coupons.ToListAsync();
             return coupons;
+        }
+
+        public async Task<Coupon?> FindCouponByCodeAsync(string couponCode)
+        {
+            return await _dbContext.Coupons
+                .SingleOrDefaultAsync(c => c.CouponCode == couponCode);
         }
     }
 }

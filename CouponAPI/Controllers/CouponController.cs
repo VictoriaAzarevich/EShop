@@ -49,10 +49,12 @@ namespace CouponAPI.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult<CouponDto>> CreateCupon([FromBody] CouponDto couponDto)
+        public async Task<ActionResult<CouponDto>> CreateCoupon([FromBody] CouponDto couponDto)
         {
             if (couponDto == null)
                 return BadRequest(new { message = "Coupon cannot be empty" });
+            if (string.IsNullOrWhiteSpace(couponDto.CouponCode) || couponDto.DiscountAmount <= 0)
+                return BadRequest(new { message = "Invalid coupon data" });
 
             var createdCoupon = await _couponService.CreateCouponAsync(couponDto);
             return Ok(createdCoupon);
@@ -60,12 +62,14 @@ namespace CouponAPI.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPut("{couponId}")]
-        public async Task<ActionResult<CouponDto>> UpdateCupon(int couponId, [FromBody] CouponDto couponDto)
+        public async Task<ActionResult<CouponDto>> UpdateCoupon(int couponId, [FromBody] CouponDto couponDto)
         {
             try
             {
                 if (couponDto == null)
                     return BadRequest(new { message = "Coupon cannot be empty" });
+                if (string.IsNullOrWhiteSpace(couponDto.CouponCode) || couponDto.DiscountAmount <= 0)
+                    return BadRequest(new { message = "Invalid coupon data" });
 
                 var updatedCoupon = await _couponService.UpdateCouponAsync(couponId, couponDto);
                 return Ok(updatedCoupon);
