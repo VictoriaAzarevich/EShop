@@ -10,7 +10,13 @@ namespace EShop.Email.Repository
 
         public async Task SendAndLogEmail(IUpdatePaymentResultMessage message)
         {
-            // Implement an email sender
+            if (string.IsNullOrWhiteSpace(message.Email))
+            {
+                throw new ArgumentException("Email address is required", nameof(message.Email));
+            }
+
+            Console.WriteLine($"Simulated email to {message.Email}: Order {message.OrderId} has been created.");
+
             EmailLog emailLog = new EmailLog()
             {
                 Email = message.Email,
