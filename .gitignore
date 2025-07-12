@@ -367,3 +367,4 @@ ShoppingCartAPI/Migrations/
 CouponAPI/Migrations/
 EShop.OrderAPI/Migrations/
 frontend/src/authConfig.ts
+EShop.Email/Migrations/
