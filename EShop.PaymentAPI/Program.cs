@@ -31,7 +31,7 @@ builder.Services.AddMassTransit(x =>
 
         cfg.Message<IUpdatePaymentResultMessage>(m =>
         {
-            m.SetEntityName(rabbitConfig["OrderExchange"]);
+            m.SetEntityName(rabbitConfig["PaymentExchange"]);
         });
     });
 });

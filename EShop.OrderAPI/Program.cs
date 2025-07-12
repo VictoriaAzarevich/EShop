@@ -36,12 +36,13 @@ builder.Services.AddMassTransit(x =>
 
         cfg.Message<IPaymentRequestMessage>(m =>
         {
-            m.SetEntityName(rabbitConfig["PaymentExchange"]);
+            m.SetEntityName(rabbitConfig["PaymentQueue"]);
         });
 
         cfg.ReceiveEndpoint(rabbitConfig["OrderPaid"], e =>
         {
             e.ConfigureConsumer<PaymentConsumer>(context);
+            e.Bind(rabbitConfig["PaymentExchange"]);
         });
     });
 });
