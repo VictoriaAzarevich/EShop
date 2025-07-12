@@ -20,7 +20,8 @@ namespace EShop.PaymentAPI.Messaging
                 Id = Guid.NewGuid(),
                 MessageCreated = DateTime.UtcNow,
                 message.OrderId,
-                Status = result
+                Status = result,
+                message.Email
             });
         }
     }

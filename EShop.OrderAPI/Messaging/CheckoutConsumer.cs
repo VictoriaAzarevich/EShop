@@ -56,7 +56,8 @@ namespace EShop.OrderAPI.Messaging
                     CartNumber = orderHeader.CardNumber,
                     orderHeader.CVV,
                     orderHeader.ExpiryMonthYear,
-                    orderHeader.OrderTotal
+                    orderHeader.OrderTotal,
+                    orderHeader.Email
                 });
             }
             catch (Exception ex)
