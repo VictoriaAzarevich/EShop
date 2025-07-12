@@ -11,22 +11,27 @@ const CreateCoupon = () => {
   const { getAccessTokenSilently } = useAuth0();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      const token = await getAccessTokenSilently();
-      await createCoupon({ couponCode, discountAmount }, token);
+  try {
+    const token = await getAccessTokenSilently();
+    await createCoupon({ couponCode, discountAmount }, token);
 
-      toast.success("The coupon was successfully created!");
+    toast.success("The coupon was successfully created!");
 
-      setTimeout(() => {
-        navigate("/coupons");
-      }, 1500);
-    } catch (error) {
-      console.error("Error when creating a coupon", error);
-      toast.error("Error when creating a coupon");
-    }
-  };
+    setTimeout(() => {
+      navigate("/coupons");
+    }, 1500);
+  } catch (error: any) {
+    console.error("Error when creating a coupon", error);
+
+    const serverMessage =
+      error?.response?.data?.message || error?.message || "Error when creating a coupon";
+
+    toast.error(serverMessage);
+  }
+};
+
 
   return (
     <div className="p-4 max-w-md mx-auto">
@@ -45,8 +50,9 @@ const CreateCoupon = () => {
           type="number"
           placeholder="Discount amount"
           value={discountAmount}
-          onChange={(e) => setDiscountAmount(Number(e.target.value))}
-          min={1}
+          onChange={(e) => setDiscountAmount(parseFloat(e.target.value))}
+          min={0.01}
+          step={0.01}
           required
         />
         <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">

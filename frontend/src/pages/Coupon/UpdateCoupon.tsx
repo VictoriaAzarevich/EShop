@@ -61,12 +61,13 @@ const UpdateCoupon = () => {
           required
         />
         <input
-          type="number"
           className="border p-2 rounded"
+          type="number"
           placeholder="Discount amount"
           value={discountAmount}
-          onChange={(e) => setDiscountAmount(Number(e.target.value))}
-          min={1}
+          onChange={(e) => setDiscountAmount(parseFloat(e.target.value))}
+          min={0.01}
+          step={0.01}
           required
         />
         <button
