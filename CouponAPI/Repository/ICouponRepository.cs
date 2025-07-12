@@ -9,5 +9,6 @@ namespace CouponAPI.Repository
         Task<Coupon> UpdateCouponAsync(int couponId, Coupon coupon);
         Task DeleteCouponAsync(int couponId);
         Task<IEnumerable<Coupon>> GetCouponsAsync();
+        Task<Coupon?> FindCouponByCodeAsync(string couponCode);
     }
 }

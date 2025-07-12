@@ -13,7 +13,7 @@ namespace CouponAPI.Services
         public async Task<CouponDto> CreateCouponAsync(CouponDto couponDto)
         {
             couponDto.CouponCode = couponDto.CouponCode.ToLower();
-            var existingCoupon = await _couponRepository.GetCouponByCodeAsync(couponDto.CouponCode);
+            var existingCoupon = await _couponRepository.FindCouponByCodeAsync(couponDto.CouponCode);
             if (existingCoupon != null)
             {
                 throw new InvalidOperationException($"Coupon code '{couponDto.CouponCode}' already exists.");

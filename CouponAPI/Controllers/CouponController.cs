@@ -55,9 +55,21 @@ namespace CouponAPI.Controllers
                 return BadRequest(new { message = "Coupon cannot be empty" });
             if (string.IsNullOrWhiteSpace(couponDto.CouponCode) || couponDto.DiscountAmount <= 0)
                 return BadRequest(new { message = "Invalid coupon data" });
-
-            var createdCoupon = await _couponService.CreateCouponAsync(couponDto);
-            return Ok(createdCoupon);
+            try
+            {
+                var createdCoupon = await _couponService.CreateCouponAsync(couponDto);
+                return Ok(createdCoupon);
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogWarning(ex, "Duplicate coupon code attempt: {CouponCode}", couponDto.CouponCode);
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while creating coupon.");
+                return StatusCode(500, new { message = "Internal server error" });
+            }
         }
 
         [Authorize(Roles = "admin")]
